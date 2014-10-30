@@ -1,9 +1,9 @@
 Validate Brazilian Identification Numbers
 =========================================
 
-This package provides functions for working with CNPJ and PIS/PASEP numbers,
-which identify firms and people respectively in Brazil. Validating 1,000 CNPJ
-takes about .0256 seconds. Validating 1,000 PIS takes about .0209 seconds.
+Python functions for working with CNPJ and PIS/PASEP numbers, identify firms
+and people respectively in Brazil. Validating 1,000 CNPJ takes about .0256
+seconds. Validating 1,000 PIS takes about .0209 seconds.
 
 Usage Examples
 --------------
