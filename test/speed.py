@@ -37,9 +37,7 @@ def pis_speed():
         try:
             assert int(c['good']) == validate_pis(c['pis'])
         except:
-            print c
             print 'PIS/PASEP Validation failed: {0}'.format(c['pis'])
-            raise
 
 reps = 1000
 
