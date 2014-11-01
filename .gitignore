@@ -4,3 +4,7 @@
 *.swp
 .DS_Store
 
+# distribution
+MANIFEST
+dist/
+

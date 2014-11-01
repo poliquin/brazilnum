@@ -1,8 +1,8 @@
 Validate Brazilian Identification Numbers
 =========================================
 
-Python functions for working with CNPJ and PIS/PASEP numbers, identify firms
-and people respectively in Brazil.
+Python functions for working with CNPJ and PIS/PASEP numbers, which identify
+firms and people respectively in Brazil.
 
 Usage Examples
 --------------
@@ -129,13 +129,4 @@ The same thing is possible for PIS/PASEP using the ``random_pis`` function:
     random_pis()
 
 
-Performance
------------
-
-Use the speed test in ``test/speed.py`` to time the validation functions:
-
-    $ python test/speed.py
-
-On a 2012 Macbook Air, validating 1,000 CNPJ takes about .0256 seconds.
-Validating 1,000 PIS takes about .0209 seconds.
 
