@@ -4,6 +4,11 @@ Validate Brazilian Identification Numbers
 Python functions for working with CNPJ and PIS/PASEP numbers, which identify
 firms and people respectively in Brazil.
 
+Installation
+------------
+
+    pip install brazilnum
+
 Usage Examples
 --------------
 
@@ -83,7 +88,7 @@ Padding works the same way for PIS/PASEP numbers:
     ValueError: Invalid PIS/PASEP: 11161241310
 
 
-If you're interested in just the check digits (i.e. last two digits), use the
+If you're interested in just the check digits (i.e. last digits), use the
 ``cnpj_check_digits`` and ``pis_check_digit`` functions to find them:
 
     >>> from brazilnum.cnpj import cnpj_check_digits
@@ -127,6 +132,4 @@ The same thing is possible for PIS/PASEP using the ``random_pis`` function:
 
     from brazilnum.pis import random_pis
     random_pis()
-
-
 
