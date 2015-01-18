@@ -1,8 +1,8 @@
 Validate Brazilian Identification Numbers
 =========================================
 
-Python functions for working with CNPJ and PIS/PASEP numbers, which identify
-firms and people respectively in Brazil.
+Python functions for working with CNPJ, CPF, and PIS/PASEP numbers, which
+identify firms and people in Brazil.
 
 Installation
 ------------
