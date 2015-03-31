@@ -1,3 +1,2 @@
 
-__all__ = ['cnpj', 'pis']
-
+__all__ = ['cnpj', 'cei', 'pis', 'cpf']
