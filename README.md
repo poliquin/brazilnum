@@ -1,7 +1,7 @@
 Validate Brazilian Identification Numbers
 =========================================
 
-Python functions for working with CNPJ, CPF, and PIS/PASEP numbers, which
+Python functions for working with CNPJ, CEI, CPF, and PIS/PASEP numbers, which
 identify firms and people in Brazil.
 
 Installation
@@ -18,6 +18,12 @@ Validate a CNPJ number for a firm, in this case Telefônica Brasil:
     >>> validate_cnpj('02.558.157/0001-62')
     True
 
+Validate a CEI number, used for businesses that do not require a CNPJ:
+
+    >>> from brazilnum.cei import validate_cei
+    >>> validate_cei('11.583.00249/85')
+    True
+
 Validate CPF and PIS/PASEP numbers for individuals:
 
     >>> from brazilnum.pis import validate_pis
@@ -27,32 +33,37 @@ Validate CPF and PIS/PASEP numbers for individuals:
     >>> validate_cpf('968.811.342-58')
     True
 
-
 Note that the functions work even if the numbers are not formatted:
 
     >>> validate_cnpj('02558157000162')
+    True
+    >>> validate_cei('115830024985')
     True
     >>> validate_pis('12561241310')
     True
     >>> validate_cpf('96881134258')
     True
 
-The validation function returns ``False`` for invalid identifiers:
+The validation functions return ``False`` for invalid identifiers:
 
     >>> validate_cnpj('02.558.157/0001-55')
+    False
+    >>> validate_cei('11.583.00249/84')
     False
     >>> validate_pis('111.6124.131-0')
     False
     >>> validate_cpf('327.861.067-97')
     False
 
-Use the ``format_cnpj`` function when displaying CNPJ numbers and the
-``format_cpf`` and ``format_pis`` functions when displaying personal
-identifiers:
+Use the format function when displaying identifiers:
 
     >>> from brazilnum.cnpj import format_cnpj
     >>> format_cnpj('02558157000162')
     '02.558.157/0001-62'
+
+    >>> from brazilnum.cei import format_cei
+    >>> format_cei('115830024985')
+    '11.583.00249/85'
 
     >>> from brazilnum.pis import format_pis
     >>> format_pis('12561241310')
@@ -67,7 +78,11 @@ There is also a helper function to remove formatting from identifiers:
     >>> from brazilnum.cnpj import clean_cnpj
     >>> clean_cnpj('02.558.157/0001-62')
     '02558157000162'
-    
+   
+    >>> from brazilnum.cei import clean_cei
+    >>> clean_cei('11.583.00249/85')
+    '115830024985'
+
     >>> from brazilnum.pis import clean_pis
     >>> clean_pis('125.6124.131-0')
     '12561241310'
@@ -76,7 +91,7 @@ There is also a helper function to remove formatting from identifiers:
     >>> clean_cpf('968.811.342-58')
     '96881134258'
 
-Your data source might store CNPJ as an integer, in which case the leading
+Your data source might store CNPJ and CEI as integers, in which case leading
 zeros will be missing. You can pad and validate these numbers in one step:
 
     >>> from brazilnum.cnpj import pad_cnpj
@@ -87,6 +102,10 @@ zeros will be missing. You can pad and validate these numbers in one step:
     Traceback (most recent call last):
         ...
     ValueError: Invalid CNPJ: 02558157000155
+
+    >>> from brazilnum.cei import pad_cei
+    >>> pad_cei(115830024985, validate=True)
+    '115830024985'
 
 You can also skip the validation step:
 
@@ -115,12 +134,16 @@ Padding works the same way for PIS/PASEP and CPF numbers:
     ValueError: Invalid CPF: 04193675867
 
 If you're interested in just the check digits (i.e. last digits), use the
-``cnpj_check_digits``, ``cpf_check_digits``, and ``pis_check_digit``
-functions to find them:
+``cnpj_check_digits``, ``cei_check_digit``, ``cpf_check_digits``, and
+``pis_check_digit`` functions to find them:
 
     >>> from brazilnum.cnpj import cnpj_check_digits
     >>> cnpj_check_digits('02.558.157/0001-62')
     (6, 2)
+
+    >>> from brazilnum.cei import cei_check_digit
+    >>> cei_check_digit('11.583.00249/85')
+    5
 
     >>> from brazilnum.cpf import cpf_check_digits
     >>> cpf_check_digits('041.936.758-66')
@@ -134,6 +157,11 @@ Check digits are calculated from the first 12 digits for CNPJ:
 
     >>> cnpj_check_digits('025581570001')
     (6, 2)
+
+Check digit is calculated from the first 11 digits for CEI:
+
+    >>> cei_check_digit('11583002498')
+    5
 
 Check digits are calculated from the first 9 digits for CPF:
 
@@ -163,6 +191,11 @@ which can return either unformatted or formatted identifiers:
     from brazilnum.cnpj import random_cnpj
     random_cnpj()       # for a random, formatted CNPJ
     random_cnpj(False)  # for a random, unformatted CNPJ
+
+Use ``random_cei`` for random CEI identifiers:
+
+    from brazilnum.cei import random_cei
+    random_cei()
 
 The same thing is possible for PIS/PASEP using the ``random_pis`` function:
 
