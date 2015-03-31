@@ -3,12 +3,12 @@ from distutils.core import setup
 setup(
         name = 'brazilnum',
         packages = ['brazilnum'],
-        version = '0.6.1',
-        description = 'Validators for Brazilian CNPJ, CPF, and PIS/PASEP numbers.',
+        version = '0.7.1',
+        description = 'Validators for Brazilian CNPJ, CEI, CPF, and PIS/PASEP',
         author = 'Chris Poliquin',
         author_email = 'cpoliquin@hbs.edu',
         url = 'https://github.com/poliquin/brazilnum',
-        keywords = ['brazil', 'cnpj', 'cpf', 'pis', 'pasep'],
+        keywords = ['brazil', 'cnpj', 'cei', 'cpf', 'pis', 'pasep'],
         classifiers = [
             'Programming Language :: Python',
             'Programming Language :: Python :: 3',
@@ -22,9 +22,7 @@ setup(
 Validate Brazilian Identification Numbers
 -----------------------------------------
 
-Python functions for working with CNPJ, CPF, and PIS/PASEP numbers,
+Python functions for working with CNPJ, CEI, CPF, and PIS/PASEP numbers,
 which identify firms and people in Brazil.
 """
 )
-
-
