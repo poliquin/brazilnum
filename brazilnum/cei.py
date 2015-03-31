@@ -35,14 +35,14 @@ def cei_check_digit(cei):
         raise ValueError('CEI must have at least 11 digits: {0}'.format(cei))
     digits = [int(k) for k in cei[:12]]
     # find the check digit
-    digsum = sum(mul(*k) for k in zip(CEI_WEIGHTS, digits[:-1]))
+    digsum = sum(mul(*k) for k in zip(CEI_WEIGHTS, digits))
     return 10 - (sum(divmod(digsum % 100, 10)) % 10)
 
 def format_cei(cei):
     """Applies typical 00.000.00000/00 formatting to CEI."""
     fmt = '{0}.{1}.{2}/{3}'
     cei = clean_cei(cei)
-    return fmt.format(cei[:3], cei[3:6], cei[6:10], cei[10:])
+    return fmt.format(cei[:2], cei[2:5], cei[5:10], cei[10:])
 
 def pad_cei(cei, validate=True):
     """Takes a CEI that probably had leading zeros and pads it."""
