@@ -3,6 +3,7 @@
 import re
 import random
 from operator import mul
+from collections import namedtuple
 
 """
 Functions for working with Brazilian company identifiers (CNPJ).
@@ -12,6 +13,7 @@ Functions for working with Brazilian company identifiers (CNPJ).
 NONDIGIT = re.compile(r'[^0-9]')
 CNPJ_FIRST_WEIGHTS  = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]
 CNPJ_SECOND_WEIGHTS = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]
+CNPJ = namedtuple('CNPJ', ['cnpj', 'firm', 'establishment', 'check'])
 
 
 def clean_cnpj(cnpj):
@@ -78,6 +80,19 @@ def pad_cnpj(cnpj, validate=True):
         raise ValueError('Invalid CNPJ: {0}'.format(cnpj))
     return cnpj
 
+def parse_cnpj(cnpj, formatted=True, validate=True):
+    """Split CNPJ into firm, establishment, and check digit parts."""
+    cnpj = pad_cnpj(cnpj, validate)
+    estbl, check = cnpj[8:12], cnpj[12:]
+    if formatted:
+        cnpj = format_cnpj(cnpj)
+        firm = cnpj[:10]
+        return CNPJ(cnpj, firm, estbl, check)
+    else:
+        firm = cnpj[:8]
+        check = tuple(int(k) for k in check)
+        return CNPJ(int(cnpj), int(firm), int(estbl), check)
+
 def random_cnpj(formatted=True):
     """Create a random, valid CNPJ identifier."""
     firm = random.randint(10000000, 99999999)
@@ -86,4 +101,3 @@ def random_cnpj(formatted=True):
     if formatted:
         return format_cnpj(cnpj)
     return cnpj
-
