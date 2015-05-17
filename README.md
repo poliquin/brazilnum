@@ -33,7 +33,7 @@ Validate CPF and PIS/PASEP numbers for individuals:
     >>> validate_cpf('968.811.342-58')
     True
 
-Note that the functions work even if the numbers are not formatted:
+The functions work even if the numbers are not formatted:
 
     >>> validate_cnpj('02558157000162')
     True
@@ -153,22 +153,22 @@ If you're interested in just the check digits (i.e. last digits), use the
     >>> pis_check_digit('125.6124.131-0')
     0
 
-Check digits are calculated from the first 12 digits for CNPJ:
+CNPJ check digits are calculated from the first 12 digits:
 
     >>> cnpj_check_digits('025581570001')
     (6, 2)
 
-Check digit is calculated from the first 11 digits for CEI:
+The CEI check digit is calculated from the first 11 digits:
 
     >>> cei_check_digit('11583002498')
     5
 
-Check digits are calculated from the first 9 digits for CPF:
+CPF check digits are calculated from the first 9 digits:
 
     >>> cpf_check_digits('041936758')
     (6, 6)
 
-Check digit is calculated from the first 10 digits for PIS/PASEP:
+The PIS/PASEP check digit is calculated from the first 10 digits:
 
     >>> pis_check_digit('1256124131')
     0
@@ -184,6 +184,15 @@ from the first 8 digits and a given establishment number:
 
     >>> cnpj_from_firm_id('02.558.157', establishment='0002')
     '02558157000243'
+
+CNPJ can be parsed into firm, establishment, and check digit components:
+
+    >>> from brazilnum.cnpj import parse_cnpj
+    >>> parse_cnpj('02.558.157/0001-62')
+    CNPJ(cnpj='02.558.157/0001-62', firm='02.558.157', establishment='0001', check='62')
+
+    >>> parse_cnpj('02.558.157/0001-62', formatted=False)
+    CNPJ(cnpj=2558157000162, firm=2558157, establishment=1, check=(6, 2))
 
 If you need random CNPJ for database testing, use the ``random_cnpj`` function,
 which can return either unformatted or formatted identifiers:
