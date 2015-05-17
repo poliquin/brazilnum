@@ -23,10 +23,7 @@ def validate_cei(cei):
     if len(cei) != 12:
         return False
     digits = [int(k) for k in cei]  # identifier digits
-    # validate the check digit
-    digsum = sum(mul(*k) for k in zip(CEI_WEIGHTS, digits[:-1]))
-    check = 10 - (sum(divmod(digsum % 100, 10)) % 10)
-    return check == digits[-1]
+    return _cei_check(digits[:-1]) == digits[-1]
 
 def cei_check_digit(cei):
     """Find check digit needed to make a CEI valid."""
@@ -34,9 +31,7 @@ def cei_check_digit(cei):
     if len(cei) < 11:
         raise ValueError('CEI must have at least 11 digits: {0}'.format(cei))
     digits = [int(k) for k in cei[:12]]
-    # find the check digit
-    digsum = sum(mul(*k) for k in zip(CEI_WEIGHTS, digits))
-    return 10 - (sum(divmod(digsum % 100, 10)) % 10)
+    return _cei_check(digits)
 
 def format_cei(cei):
     """Applies typical 00.000.00000/00 formatting to CEI."""
@@ -60,3 +55,11 @@ def random_cei(formatted=True):
     if formatted:
         return format_cei(cei)
     return cei
+
+def _cei_check(digits):
+    """Calculate check digit from iterable of integers."""
+    digsum = sum(mul(*k) for k in zip(CEI_WEIGHTS, digits))
+    modulo = (sum(divmod(digsum % 100, 10)) % 10)
+    if modulo == 0:
+        return 0
+    return 10 - modulo
