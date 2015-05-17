@@ -50,8 +50,8 @@ def pad_cei(cei, validate=True):
 def random_cei(formatted=True):
     """Create a random, valid CEI identifier."""
     uf = random.randint(11, 53)
-    stem = random.randint(100000000, 999999999)
-    cei = '{0}{1}{2}'.format(uf, stem, cei_check_digit(stem))
+    stem = '{0}{1}'.format(uf, random.randint(100000000, 999999999))
+    cei = '{0}{1}'.format(stem, cei_check_digit(stem))
     if formatted:
         return format_cei(cei)
     return cei
