@@ -189,10 +189,10 @@ CNPJ can be parsed into firm, establishment, and check digit components:
 
     >>> from brazilnum.cnpj import parse_cnpj
     >>> parse_cnpj('02.558.157/0001-62')
-    CNPJ(cnpj='02.558.157/0001-62', firm='02.558.157', establishment='0001', check='62')
+    CNPJ(cnpj='02.558.157/0001-62', firm='02.558.157', establishment='0001', check='62', valid=True)
 
     >>> parse_cnpj('02.558.157/0001-62', formatted=False)
-    CNPJ(cnpj=2558157000162, firm=2558157, establishment=1, check=(6, 2))
+    CNPJ(cnpj=2558157000162, firm=2558157, establishment=1, check=(6, 2), valid=True)
 
 If you need random CNPJ for database testing, use the ``random_cnpj`` function,
 which can return either unformatted or formatted identifiers:

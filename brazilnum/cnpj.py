@@ -13,7 +13,7 @@ Functions for working with Brazilian company identifiers (CNPJ).
 NONDIGIT = re.compile(r'[^0-9]')
 CNPJ_FIRST_WEIGHTS  = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]
 CNPJ_SECOND_WEIGHTS = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]
-CNPJ = namedtuple('CNPJ', ['cnpj', 'firm', 'establishment', 'check'])
+CNPJ = namedtuple('CNPJ', ['cnpj', 'firm', 'establishment', 'check', 'valid'])
 
 
 def clean_cnpj(cnpj):
@@ -80,18 +80,19 @@ def pad_cnpj(cnpj, validate=True):
         raise ValueError('Invalid CNPJ: {0}'.format(cnpj))
     return cnpj
 
-def parse_cnpj(cnpj, formatted=True, validate=True):
+def parse_cnpj(cnpj, formatted=True):
     """Split CNPJ into firm, establishment, and check digit parts."""
-    cnpj = pad_cnpj(cnpj, validate)
+    cnpj = pad_cnpj(cnpj, False)
     estbl, check = cnpj[8:12], cnpj[12:]
+    valid = validate_cnpj(cnpj)
     if formatted:
         cnpj = format_cnpj(cnpj)
         firm = cnpj[:10]
-        return CNPJ(cnpj, firm, estbl, check)
+        return CNPJ(cnpj, firm, estbl, check, valid)
     else:
         firm = cnpj[:8]
         check = tuple(int(k) for k in check)
-        return CNPJ(int(cnpj), int(firm), int(estbl), check)
+        return CNPJ(int(cnpj), int(firm), int(estbl), check, valid)
 
 def random_cnpj(formatted=True):
     """Create a random, valid CNPJ identifier."""

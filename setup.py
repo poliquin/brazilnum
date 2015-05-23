@@ -3,7 +3,7 @@ from distutils.core import setup
 setup(
         name = 'brazilnum',
         packages = ['brazilnum'],
-        version = '0.7.5',
+        version = '0.7.6',
         description = 'Validators for Brazilian CNPJ, CEI, CPF, and PIS/PASEP',
         author = 'Chris Poliquin',
         author_email = 'cpoliquin@hbs.edu',
