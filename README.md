@@ -73,23 +73,14 @@ Use the format function when displaying identifiers:
     >>> format_cpf('96881134258')
     '968.811.342-58'
 
-There is also a helper function to remove formatting from identifiers:
+There is a helper function to remove formatting from identifiers:
 
-    >>> from brazilnum.cnpj import clean_cnpj
-    >>> clean_cnpj('02.558.157/0001-62')
+    >>> from brazilnum.util import clean_id
+    >>> clean_id('02.558.157/0001-62')
     '02558157000162'
    
-    >>> from brazilnum.cei import clean_cei
-    >>> clean_cei('11.583.00249/85')
+    >>> clean_id(115830024985)
     '115830024985'
-
-    >>> from brazilnum.pis import clean_pis
-    >>> clean_pis('125.6124.131-0')
-    '12561241310'
-
-    >>> from brazilnum.cpf import clean_cpf
-    >>> clean_cpf('968.811.342-58')
-    '96881134258'
 
 Your data source might store CNPJ and CEI as integers, in which case leading
 zeros will be missing. You can pad and validate these numbers in one step:

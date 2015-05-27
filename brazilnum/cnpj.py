@@ -1,30 +1,26 @@
 #!/usr/bin/env python
 
-import re
+from __future__ import absolute_import
+
 import random
 from operator import mul
 from collections import namedtuple
+
+from .util import clean_id
 
 """
 Functions for working with Brazilian company identifiers (CNPJ).
 
 """
 
-NONDIGIT = re.compile(r'[^0-9]')
 CNPJ_FIRST_WEIGHTS  = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]
 CNPJ_SECOND_WEIGHTS = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]
 CNPJ = namedtuple('CNPJ', ['cnpj', 'firm', 'establishment', 'check', 'valid'])
 
 
-def clean_cnpj(cnpj):
-    """Takes a CNPJ and turns it into a string of only numbers."""
-    if isinstance(cnpj, int):
-        return str(cnpj)
-    return NONDIGIT.sub('', str(cnpj))
-
 def validate_cnpj(cnpj):
     """Check whether CNPJ is valid."""
-    cnpj = clean_cnpj(cnpj)
+    cnpj = clean_id(cnpj)
     # all complete CNPJ are 14 digits long
     if len(cnpj) != 14:
         return False
@@ -45,7 +41,7 @@ def validate_cnpj(cnpj):
 
 def cnpj_check_digits(cnpj):
     """Find two check digits needed to make a CNPJ valid."""
-    cnpj = clean_cnpj(cnpj)
+    cnpj = clean_id(cnpj)
     if len(cnpj) < 12:
         raise ValueError('CNPJ must have at least 12 digits: {0}'.format(cnpj))
     digits = [int(k) for k in cnpj[:13]]
@@ -64,19 +60,19 @@ def cnpj_from_firm_id(firm, establishment='0001'):
        complete CNPJ by appending an establishment identifier and calculating
        necessary check digits.
     """
-    cnpj = clean_cnpj('{0}{1}'.format(firm, establishment))
+    cnpj = clean_id('{0}{1}'.format(firm, establishment))
     checks = ''.join([str(k) for k in cnpj_check_digits(cnpj)])
     return cnpj + checks
 
 def format_cnpj(cnpj):
     """Applies typical 00.000.000/0000-00 formatting to CNPJ."""
     fmt = '{0}.{1}.{2}/{3}-{4}'
-    cnpj = clean_cnpj(cnpj)
+    cnpj = clean_id(cnpj)
     return fmt.format(cnpj[:2], cnpj[2:5], cnpj[5:8], cnpj[8:12], cnpj[12:])
 
 def pad_cnpj(cnpj, validate=True):
     """Takes a CNPJ that probably had leading zeros and pads it."""
-    cnpj = clean_cnpj(cnpj)
+    cnpj = clean_id(cnpj)
     cnpj = '%0.014i' % int(cnpj)
     if validate and not validate_cnpj(cnpj):
         raise ValueError('Invalid CNPJ: {0}'.format(cnpj))

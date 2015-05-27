@@ -1,8 +1,12 @@
 #!/usr/bin/env python
 
+from __future__ import absolute_import
+
 import re
 from random import randint
 from operator import mul
+
+from .util import clean_id
 
 """
 Functions for working with Brazilian PIS/PASEP identifiers.
@@ -13,15 +17,9 @@ NONDIGIT = re.compile(r'[^0-9]')
 PIS_WEIGHTS = [3, 2, 9, 8, 7, 6, 5, 4, 3, 2]
 
 
-def clean_pis(pis):
-    """Takes a PIS/PASEP and turns it into a string of only numbers."""
-    if isinstance(pis, int):
-        return str(pis)
-    return NONDIGIT.sub('', str(pis))
-
 def validate_pis(pis):
     """Check whether PIS/PASEP is valid."""
-    pis = clean_pis(pis)
+    pis = clean_id(pis)
     # all complete PIS/PASEP are 11 digits long
     if len(pis) != 11:
         return False
@@ -29,7 +27,7 @@ def validate_pis(pis):
 
 def pis_check_digit(pis):
     """Find check digit needed to make a PIS/PASEP valid."""
-    pis = clean_pis(pis)
+    pis = clean_id(pis)
     if len(pis) < 10:
         raise ValueError('PIS/PASEP must be at least 10 digits: {0}'.format(pis))
     digits = [int(k) for k in pis[:11]]
@@ -44,14 +42,14 @@ def pis_check_digits(pis):
 def format_pis(pis):
     """Applies typical 000.0000.000-0 formatting to PIS/PASEP."""
     fmt = '{0}.{1}.{2}-{3}'
-    pis = clean_pis(pis)
+    pis = clean_id(pis)
     if len(pis) < 11:
         raise ValueError('Insufficient length for PIS/PASEP: {0}'.format(pis))
     return fmt.format(pis[:3], pis[3:7], pis[7:10], pis[10])
 
 def pad_pis(pis, validate=True):
     """Takes a PIS/PASEP that had leading zeros and pads it."""
-    pis = '%0.011i' % int(clean_pis(pis))
+    pis = '%0.011i' % int(clean_id(pis))
     if validate and not validate_pis(pis):
         raise ValueError('Invalid PIS/PASEP: {0}'.format(pis))
     return pis
