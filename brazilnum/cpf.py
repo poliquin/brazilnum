@@ -17,12 +17,12 @@ NONDIGIT = re.compile(r'[^0-9]')
 CPF_WEIGHTS = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
 
-def validate_cpf(cpf):
+def validate_cpf(cpf, autopad=True):
     """Check whether CPF is valid."""
     cpf = clean_id(cpf)
     # all complete CPF are 11 digits long
     if len(cpf) != 11:
-        return False
+        return validate_cpf(pad_cpf(cpf), False) if autopad else False
     digits = [int(k) for k in cpf]  # identifier digits
     checks = digits[-2:]  # last two digits are check digits
     # validate the first check digit

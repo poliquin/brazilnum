@@ -18,12 +18,12 @@ CNPJ_SECOND_WEIGHTS = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]
 CNPJ = namedtuple('CNPJ', ['cnpj', 'firm', 'establishment', 'check', 'valid'])
 
 
-def validate_cnpj(cnpj):
-    """Check whether CNPJ is valid."""
+def validate_cnpj(cnpj, autopad=True):
+    """Check whether CNPJ is valid. Optionally pad if too short."""
     cnpj = clean_id(cnpj)
     # all complete CNPJ are 14 digits long
     if len(cnpj) != 14:
-        return False
+        return validate_cnpj(pad_cnpj(cnpj), False) if autopad else False
     checks = [int(k) for k in cnpj[12:]]  # check digits
     digits = [int(k) for k in cnpj[:13]]  # identifier digits
     # validate the first check digit
@@ -57,14 +57,17 @@ def cnpj_check_digits(cnpj):
     return check, 11 - cs
 
 
-def cnpj_from_firm_id(firm, establishment='0001'):
+def cnpj_from_firm_id(firm, establishment='0001', formatted=False):
     """Takes first 8 digits of a CNPJ (firm identifier) and builds a valid,
        complete CNPJ by appending an establishment identifier and calculating
        necessary check digits.
     """
     cnpj = clean_id('{0}{1}'.format(firm, establishment))
     checks = ''.join([str(k) for k in cnpj_check_digits(cnpj)])
-    return cnpj + checks
+    if not formatted:
+        return cnpj + checks
+    else:
+        return format_cnpj(cnpj + checks)
 
 
 def format_cnpj(cnpj):

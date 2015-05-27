@@ -17,12 +17,12 @@ NONDIGIT = re.compile(r'[^0-9]')
 PIS_WEIGHTS = [3, 2, 9, 8, 7, 6, 5, 4, 3, 2]
 
 
-def validate_pis(pis):
-    """Check whether PIS/PASEP is valid."""
+def validate_pis(pis, autopad=True):
+    """Check whether PIS/PASEP is valid. Optionally pad if too short."""
     pis = clean_id(pis)
     # all complete PIS/PASEP are 11 digits long
     if len(pis) != 11:
-        return False
+        return validate_pis(pad_pis(pis), False) if autopad else False
     return int(pis[-1]) == pis_check_digit(pis)
 
 

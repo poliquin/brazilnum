@@ -17,12 +17,12 @@ NONDIGIT = re.compile(r'[^0-9]')
 CEI_WEIGHTS = [7, 4, 1, 8, 5, 2, 1, 6, 3, 7, 4]
 
 
-def validate_cei(cei):
-    """Check whether CEI is valid."""
+def validate_cei(cei, autopad=True):
+    """Check whether CEI is valid. Optionally pad if too short."""
     cei = clean_id(cei)
     # all complete CEI are 12 digits long
     if len(cei) != 12:
-        return False
+        return validate_cei(pad_cei(cei), False) if autopad else False
     digits = [int(k) for k in cei]  # identifier digits
     return _cei_check(digits[:-1]) == digits[-1]
 
