@@ -39,6 +39,7 @@ def validate_cnpj(cnpj):
     # both check digits are correct
     return True
 
+
 def cnpj_check_digits(cnpj):
     """Find two check digits needed to make a CNPJ valid."""
     cnpj = clean_id(cnpj)
@@ -55,6 +56,7 @@ def cnpj_check_digits(cnpj):
         return check, 0
     return check, 11 - cs
 
+
 def cnpj_from_firm_id(firm, establishment='0001'):
     """Takes first 8 digits of a CNPJ (firm identifier) and builds a valid,
        complete CNPJ by appending an establishment identifier and calculating
@@ -64,11 +66,13 @@ def cnpj_from_firm_id(firm, establishment='0001'):
     checks = ''.join([str(k) for k in cnpj_check_digits(cnpj)])
     return cnpj + checks
 
+
 def format_cnpj(cnpj):
     """Applies typical 00.000.000/0000-00 formatting to CNPJ."""
     cnpj = pad_cnpj(cnpj)
     fmt = '{0}.{1}.{2}/{3}-{4}'
     return fmt.format(cnpj[:2], cnpj[2:5], cnpj[5:8], cnpj[8:12], cnpj[12:])
+
 
 def pad_cnpj(cnpj, validate=False):
     """Takes a CNPJ and pads it with leading zeros."""
@@ -77,8 +81,9 @@ def pad_cnpj(cnpj, validate=False):
         return padded, validate_cnpj(padded)
     return padded
 
+
 def parse_cnpj(cnpj, formatted=True):
-    """Split CNPJ into firm, establishment, and check digit parts."""
+    """Split CNPJ into firm, establishment, and check digits, and validate."""
     cnpj = pad_cnpj(cnpj)
     estbl, check = cnpj[8:12], cnpj[12:]
     valid = validate_cnpj(cnpj)
@@ -90,6 +95,7 @@ def parse_cnpj(cnpj, formatted=True):
         firm = cnpj[:8]
         check = tuple(int(k) for k in check)
         return CNPJ(int(cnpj), int(firm), int(estbl), check, valid)
+
 
 def random_cnpj(formatted=True):
     """Create a random, valid CNPJ identifier."""

@@ -36,6 +36,7 @@ def validate_cpf(cpf):
     # both check digits are correct
     return True
 
+
 def cpf_check_digits(cpf):
     """Find two check digits needed to make a CPF valid."""
     cpf = clean_id(cpf)
@@ -48,11 +49,13 @@ def cpf_check_digits(cpf):
     digits.append(cs)
     return cs, (sum([mul(*k) for k in zip(CPF_WEIGHTS, digits[1:])]) % 11) % 10
 
+
 def format_cpf(cpf):
     """Applies typical 000.000.000-00 formatting to CPF."""
     cpf = pad_cpf(cpf)
     fmt = '{0}.{1}.{2}-{3}'
     return fmt.format(cpf[:3], cpf[3:6], cpf[6:9], cpf[9:])
+
 
 def pad_cpf(cpf, validate=False):
     """Takes a CPF that probably had leading zeros and pads it."""
@@ -60,6 +63,7 @@ def pad_cpf(cpf, validate=False):
     if validate:
         return padded, validate_cpf(padded)
     return padded
+
 
 def random_cpf(formatted=True):
     """Create a random, valid CPF identifier."""

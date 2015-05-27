@@ -25,25 +25,30 @@ def validate_pis(pis):
         return False
     return int(pis[-1]) == pis_check_digit(pis)
 
+
 def pis_check_digit(pis):
     """Find check digit needed to make a PIS/PASEP valid."""
     pis = clean_id(pis)
     if len(pis) < 10:
-        raise ValueError('PIS/PASEP must be at least 10 digits: {0}'.format(pis))
+        raise ValueError(
+            'PIS/PASEP must be at least 10 digits: {0}'.format(pis))
     digits = [int(k) for k in pis[:11]]
     # find check digit
     cs = sum([mul(*k) for k in zip(PIS_WEIGHTS, digits)]) % 11
     return 0 if cs < 2 else 11 - cs
 
+
 def pis_check_digits(pis):
     """Alias for pis_check_digit function. PIS/PASEP uses single digit."""
     return pis_check_digit(pis)
+
 
 def format_pis(pis):
     """Applies typical 000.0000.000-0 formatting to PIS/PASEP."""
     pis = pad_pis(pis)
     fmt = '{0}.{1}.{2}-{3}'
     return fmt.format(pis[:3], pis[3:7], pis[7:10], pis[10])
+
 
 def pad_pis(pis, validate=False):
     """Takes a PIS/PASEP that had leading zeros and pads it."""
@@ -52,6 +57,7 @@ def pad_pis(pis, validate=False):
         return padded, validate_pis(padded)
     return padded
 
+
 def random_pis(formatted=True):
     """Create a random, valid PIS identifier."""
     pis = randint(1000000000, 9999999999)
@@ -59,4 +65,3 @@ def random_pis(formatted=True):
     if formatted:
         return format_pis(pis)
     return pis
-

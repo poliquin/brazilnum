@@ -16,6 +16,7 @@ Functions for working with Brazilian CEI identifiers.
 NONDIGIT = re.compile(r'[^0-9]')
 CEI_WEIGHTS = [7, 4, 1, 8, 5, 2, 1, 6, 3, 7, 4]
 
+
 def validate_cei(cei):
     """Check whether CEI is valid."""
     cei = clean_id(cei)
@@ -25,6 +26,7 @@ def validate_cei(cei):
     digits = [int(k) for k in cei]  # identifier digits
     return _cei_check(digits[:-1]) == digits[-1]
 
+
 def cei_check_digit(cei):
     """Find check digit needed to make a CEI valid."""
     cei = clean_id(cei)
@@ -33,11 +35,13 @@ def cei_check_digit(cei):
     digits = [int(k) for k in cei[:12]]
     return _cei_check(digits)
 
+
 def format_cei(cei):
     """Applies typical 00.000.00000/00 formatting to CEI."""
     cei = pad_cei(cei)
     fmt = '{0}.{1}.{2}/{3}'
     return fmt.format(cei[:2], cei[2:5], cei[5:10], cei[10:])
+
 
 def pad_cei(cei, validate=False):
     """Takes a CEI that probably had leading zeros and pads it."""
@@ -45,6 +49,7 @@ def pad_cei(cei, validate=False):
     if validate:
         return padded, validate_cei(padded)
     return padded
+
 
 def random_cei(formatted=True):
     """Create a random, valid CEI identifier."""
@@ -54,6 +59,7 @@ def random_cei(formatted=True):
     if formatted:
         return format_cei(cei)
     return cei
+
 
 def _cei_check(digits):
     """Calculate check digit from iterable of integers."""
