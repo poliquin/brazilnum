@@ -12,49 +12,62 @@ Installation
 Usage Examples
 --------------
 
+Works with Python 2.7 and 3.
+
+
+#### Validation Functions
 Validate a CNPJ number for a firm, in this case Telefônica Brasil:
 
     >>> from brazilnum.cnpj import validate_cnpj
     >>> validate_cnpj('02.558.157/0001-62')
     True
+    >>> validate_cnpj('02.558.157/0001-55')
+    False
+
+Integer input that is too short due to missing zeros is auto-corrected:
+
+    >>> validate_cnpj(2558157000162)
+    True
+    >>> validate_cnpj(2558157000162, autopad=False)
+    False
 
 Validate a CEI number, used for businesses that do not require a CNPJ:
 
     >>> from brazilnum.cei import validate_cei
     >>> validate_cei('11.583.00249/85')
     True
+    >>> validate_cei('11.583.00249/84')
+    False
+    >>> validate_cei(115830024985)
+    True
 
 Validate CPF and PIS/PASEP numbers for individuals:
 
     >>> from brazilnum.pis import validate_pis
-    >>> from brazilnum.cpf import validate_cpf
     >>> validate_pis('125.6124.131-0')
     True
-    >>> validate_cpf('968.811.342-58')
-    True
-
-The functions work even if the numbers are not formatted:
-
-    >>> validate_cnpj('02558157000162')
-    True
-    >>> validate_cei('115830024985')
-    True
-    >>> validate_pis('12561241310')
-    True
-    >>> validate_cpf('96881134258')
-    True
-
-The validation functions return ``False`` for invalid identifiers:
-
-    >>> validate_cnpj('02.558.157/0001-55')
-    False
-    >>> validate_cei('11.583.00249/84')
-    False
     >>> validate_pis('111.6124.131-0')
     False
+
+    >>> from brazilnum.cpf import validate_cpf
+    >>> validate_cpf('968.811.342-58')
+    True
     >>> validate_cpf('327.861.067-97')
     False
 
+Validation functions work with integer and unformatted input:
+
+    >>> validate_pis(12561241310)
+    True
+    >>> validate_cpf(96881134258)
+    True
+    >>> validate_pis('12561241310')
+    True
+    >>> validate_cpf('32786106797')
+    False
+
+
+#### Formatting and Padding
 Use the format function when displaying identifiers:
 
     >>> from brazilnum.cnpj import format_cnpj
@@ -73,7 +86,8 @@ Use the format function when displaying identifiers:
     >>> format_cpf('96881134258')
     '968.811.342-58'
 
-There is a helper function to remove formatting from identifiers:
+There is a helper function to remove formatting from identifiers; it always
+returns a string:
 
     >>> from brazilnum.util import clean_id
     >>> clean_id('02.558.157/0001-62')
@@ -96,7 +110,7 @@ zeros are missing. You can pad and validate these in one step:
     >>> pad_cei(115830024985, validate=True)
     ('115830024985', True)
 
-You can also skip the validation step:
+You can skip the validation step:
 
     >>> pad_cnpj(2558157000155, validate=False)
     '02558157000155'
@@ -110,7 +124,6 @@ Padding works the same way for PIS/PASEP and CPF numbers:
     >>> pad_pis(11161241310, validate=True)
     ('11161241310', False)
 
-
     >>> from brazilnum.cpf import pad_cpf
     >>> pad_cpf(4193675866, validate=True)
     ('04193675866', True)
@@ -118,9 +131,10 @@ Padding works the same way for PIS/PASEP and CPF numbers:
     >>> pad_cpf(4193675867, validate=True)
     ('04193675867', False)
 
-If you're interested in just the check digits (i.e. last digits), use the
-``cnpj_check_digits``, ``cei_check_digit``, ``cpf_check_digits``, and
-``pis_check_digit`` functions to find them:
+
+#### Check Digits
+If you're interested in the check digits, there are functions for
+calculating them that return integers:
 
     >>> from brazilnum.cnpj import cnpj_check_digits
     >>> cnpj_check_digits('02.558.157/0001-62')
@@ -158,10 +172,12 @@ The PIS/PASEP check digit is calculated from the first 10 digits:
     >>> pis_check_digit('1256124131')
     0
 
-The first 8 digits of the CNPJ identify a firm, the next 4 digits identify a
-specific business establishment owned by that firm.  The headquarters is often
-establishment 0001.  The ``cnpj_from_firm_id`` function will create a full CNPJ
-from the first 8 digits and a given establishment number:
+
+#### CNPJ Parsing
+The first 8 digits of CNPJs identify a firm, and the following 4 digits
+identify a specific business establishment owned by that firm.  Headquarters is
+often establishment 0001.  The ``cnpj_from_firm_id`` function will create a
+full CNPJ from the first 8 digits and a given establishment number:
 
     >>> from brazilnum.cnpj import cnpj_from_firm_id
     >>> cnpj_from_firm_id('02.558.157')
@@ -169,6 +185,10 @@ from the first 8 digits and a given establishment number:
 
     >>> cnpj_from_firm_id('02.558.157', establishment='0002')
     '02558157000243'
+    
+    >>> cnpj_from_firm_id('02.558.157', establishment='0002', formatted=True)
+    '02.558.157/0002-43'
+
 
 CNPJ can be parsed into firm, establishment, and check digit components:
 
@@ -179,6 +199,8 @@ CNPJ can be parsed into firm, establishment, and check digit components:
     >>> parse_cnpj('02.558.157/0001-62', formatted=False)
     CNPJ(cnpj=2558157000162, firm=2558157, establishment=1, check=(6, 2), valid=True)
 
+
+#### Random Identifiers
 If you need random CNPJ for database testing, use the ``random_cnpj`` function,
 which can return either unformatted or formatted identifiers:
 
@@ -191,13 +213,10 @@ Use ``random_cei`` for random CEI identifiers:
     from brazilnum.cei import random_cei
     random_cei()
 
-The same thing is possible for PIS/PASEP using the ``random_pis`` function:
+The same thing exists for PIS/PASEP and CPF identifiers:
 
     from brazilnum.pis import random_pis
     random_pis()
 
-The ``random_cpf`` function will generate a random CPF identifier:
-
     from brazilnum.cpf import random_cpf
     random_cpf()
-
