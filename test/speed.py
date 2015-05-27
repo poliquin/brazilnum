@@ -6,9 +6,9 @@ import timeit
 import csv
 
 sys.path.append('..')
-from brazilnum.cnpj import validate_cnpj
-from brazilnum.pis import validate_pis
-from brazilnum.cpf import validate_cpf
+from brazilnum.cnpj import validate_cnpj, parse_cnpj, pad_cnpj
+from brazilnum.pis import validate_pis, pad_pis
+from brazilnum.cpf import validate_cpf, pad_cpf
 
 """
 Test speed of CNPJ, CPF, and PIS/PASEP functions.
@@ -42,6 +42,7 @@ def cnpj_speed():
         except:
             print('CNPJ Validation failed: {0}'.format(c['cnpj']))
 
+
 def pis_speed():
     """Check speed of validating 200 fake PIS/PASEP numbers, 100 invalid."""
     for c in PIS:
@@ -50,6 +51,7 @@ def pis_speed():
         except:
             print('PIS/PASEP Validation failed: {0}'.format(c['pis']))
 
+
 def cpf_speed():
     """Check speed of validating 200 fake CPF numbers, 100 invalid."""
     for c in CPF:
@@ -57,6 +59,7 @@ def cpf_speed():
             assert int(c['good']) == validate_cpf(c['cpf'])
         except:
             print('CPF Validation failed: {0}'.format(c['cpf']))
+
 
 reps = 1000
 
@@ -80,3 +83,26 @@ time_per_thousand_cpf = (cpf_time / (200. * reps)) * 1000.
 
 print('Validate 1,000 CPF: {0} seconds'.format(time_per_thousand_cpf))
 
+
+# time parsing of CNPJ
+def parse_cnpj_speed():
+    for i in CNPJ:
+        parse_cnpj(i)
+
+
+cnpj_parse_time = timeit.timeit(parse_cnpj_speed, number=reps)
+print('Parse 200 CNPJ: {0} seconds'.format(cnpj_parse_time))
+
+
+# time padding of all identifiers
+def pad_speed():
+    for i in CNPJ:
+        pad_cnpj(i, validate=False)
+    for i in PIS:
+        pad_pis(i, validate=False)
+    for i in CPF:
+        pad_cpf(i, validate=False)
+
+
+pad_time = timeit.timeit(pad_speed, number=reps)
+print('Pad identifiers: {0} seconds'.format(pad_time))
