@@ -41,13 +41,11 @@ def pis_check_digits(pis):
 
 def format_pis(pis):
     """Applies typical 000.0000.000-0 formatting to PIS/PASEP."""
+    pis = pad_pis(pis)
     fmt = '{0}.{1}.{2}-{3}'
-    pis = clean_id(pis)
-    if len(pis) < 11:
-        raise ValueError('Insufficient length for PIS/PASEP: {0}'.format(pis))
     return fmt.format(pis[:3], pis[3:7], pis[7:10], pis[10])
 
-def pad_pis(pis, validate=True):
+def pad_pis(pis, validate=False):
     """Takes a PIS/PASEP that had leading zeros and pads it."""
     padded = pad_id(pis, '%0.011i')
     if validate:

@@ -35,11 +35,11 @@ def cei_check_digit(cei):
 
 def format_cei(cei):
     """Applies typical 00.000.00000/00 formatting to CEI."""
+    cei = pad_cei(cei)
     fmt = '{0}.{1}.{2}/{3}'
-    cei = clean_id(cei)
     return fmt.format(cei[:2], cei[2:5], cei[5:10], cei[10:])
 
-def pad_cei(cei, validate=True):
+def pad_cei(cei, validate=False):
     """Takes a CEI that probably had leading zeros and pads it."""
     padded = pad_id(cei, '%0.012i')
     if validate:

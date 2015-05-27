@@ -66,11 +66,11 @@ def cnpj_from_firm_id(firm, establishment='0001'):
 
 def format_cnpj(cnpj):
     """Applies typical 00.000.000/0000-00 formatting to CNPJ."""
+    cnpj = pad_cnpj(cnpj)
     fmt = '{0}.{1}.{2}/{3}-{4}'
-    cnpj = clean_id(cnpj)
     return fmt.format(cnpj[:2], cnpj[2:5], cnpj[5:8], cnpj[8:12], cnpj[12:])
 
-def pad_cnpj(cnpj, validate=True):
+def pad_cnpj(cnpj, validate=False):
     """Takes a CNPJ and pads it with leading zeros."""
     padded = pad_id(cnpj, '%0.014i')
     if validate:
@@ -79,7 +79,7 @@ def pad_cnpj(cnpj, validate=True):
 
 def parse_cnpj(cnpj, formatted=True):
     """Split CNPJ into firm, establishment, and check digit parts."""
-    cnpj = pad_cnpj(cnpj, False)
+    cnpj = pad_cnpj(cnpj)
     estbl, check = cnpj[8:12], cnpj[12:]
     valid = validate_cnpj(cnpj)
     if formatted:

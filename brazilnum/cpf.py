@@ -50,11 +50,11 @@ def cpf_check_digits(cpf):
 
 def format_cpf(cpf):
     """Applies typical 000.000.000-00 formatting to CPF."""
+    cpf = pad_cpf(cpf)
     fmt = '{0}.{1}.{2}-{3}'
-    cpf = clean_id(cpf)
     return fmt.format(cpf[:3], cpf[3:6], cpf[6:9], cpf[9:])
 
-def pad_cpf(cpf, validate=True):
+def pad_cpf(cpf, validate=False):
     """Takes a CPF that probably had leading zeros and pads it."""
     padded = pad_id(cpf, '%0.011i')
     if validate:
