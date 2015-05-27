@@ -6,14 +6,14 @@ import random
 from operator import mul
 from collections import namedtuple
 
-from .util import clean_id
+from .util import clean_id, pad_id
 
 """
 Functions for working with Brazilian company identifiers (CNPJ).
 
 """
 
-CNPJ_FIRST_WEIGHTS  = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]
+CNPJ_FIRST_WEIGHTS = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]
 CNPJ_SECOND_WEIGHTS = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]
 CNPJ = namedtuple('CNPJ', ['cnpj', 'firm', 'establishment', 'check', 'valid'])
 
@@ -71,12 +71,11 @@ def format_cnpj(cnpj):
     return fmt.format(cnpj[:2], cnpj[2:5], cnpj[5:8], cnpj[8:12], cnpj[12:])
 
 def pad_cnpj(cnpj, validate=True):
-    """Takes a CNPJ that probably had leading zeros and pads it."""
-    cnpj = clean_id(cnpj)
-    cnpj = '%0.014i' % int(cnpj)
-    if validate and not validate_cnpj(cnpj):
-        raise ValueError('Invalid CNPJ: {0}'.format(cnpj))
-    return cnpj
+    """Takes a CNPJ and pads it with leading zeros."""
+    padded = pad_id(cnpj, '%0.014i')
+    if validate:
+        return padded, validate_cnpj(padded)
+    return padded
 
 def parse_cnpj(cnpj, formatted=True):
     """Split CNPJ into firm, establishment, and check digit parts."""

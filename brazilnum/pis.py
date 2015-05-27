@@ -6,7 +6,7 @@ import re
 from random import randint
 from operator import mul
 
-from .util import clean_id
+from .util import clean_id, pad_id
 
 """
 Functions for working with Brazilian PIS/PASEP identifiers.
@@ -49,10 +49,10 @@ def format_pis(pis):
 
 def pad_pis(pis, validate=True):
     """Takes a PIS/PASEP that had leading zeros and pads it."""
-    pis = '%0.011i' % int(clean_id(pis))
-    if validate and not validate_pis(pis):
-        raise ValueError('Invalid PIS/PASEP: {0}'.format(pis))
-    return pis
+    padded = pad_id(pis, '%0.011i')
+    if validate:
+        return padded, validate_pis(padded)
+    return padded
 
 def random_pis(formatted=True):
     """Create a random, valid PIS identifier."""

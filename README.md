@@ -82,21 +82,19 @@ There is a helper function to remove formatting from identifiers:
     >>> clean_id(115830024985)
     '115830024985'
 
-Your data source might store CNPJ and CEI as integers, in which case leading
-zeros will be missing. You can pad and validate these numbers in one step:
+Your data source probably stores identifiers as integers, so leading
+zeros are missing. You can pad and validate these in one step:
 
     >>> from brazilnum.cnpj import pad_cnpj
     >>> pad_cnpj(2558157000162, validate=True)
-    '02558157000162'
+    ('02558157000162', True)
     
     >>> pad_cnpj(2558157000155, validate=True)
-    Traceback (most recent call last):
-        ...
-    ValueError: Invalid CNPJ: 02558157000155
+    ('02558157000155', False)
 
     >>> from brazilnum.cei import pad_cei
     >>> pad_cei(115830024985, validate=True)
-    '115830024985'
+    ('115830024985', True)
 
 You can also skip the validation step:
 
@@ -107,22 +105,18 @@ Padding works the same way for PIS/PASEP and CPF numbers:
 
     >>> from brazilnum.pis import pad_pis
     >>> pad_pis(12561241310, validate=True)
-    '12561241310'
+    ('12561241310', True)
 
     >>> pad_pis(11161241310, validate=True)
-    Traceback (most recent call last):
-        ...
-    ValueError: Invalid PIS/PASEP: 11161241310
+    ('11161241310', False)
 
 
     >>> from brazilnum.cpf import pad_cpf
     >>> pad_cpf(4193675866, validate=True)
-    '04193675866'
+    ('04193675866', True)
 
     >>> pad_cpf(4193675867, validate=True)
-    Traceback (most recent call last):
-        ...
-    ValueError: Invalid CPF: 04193675867
+    ('04193675867', False)
 
 If you're interested in just the check digits (i.e. last digits), use the
 ``cnpj_check_digits``, ``cei_check_digit``, ``cpf_check_digits``, and

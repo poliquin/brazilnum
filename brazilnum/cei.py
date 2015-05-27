@@ -6,7 +6,7 @@ import re
 import random
 from operator import mul
 
-from .util import clean_id
+from .util import clean_id, pad_id
 
 """
 Functions for working with Brazilian CEI identifiers.
@@ -41,11 +41,10 @@ def format_cei(cei):
 
 def pad_cei(cei, validate=True):
     """Takes a CEI that probably had leading zeros and pads it."""
-    cei = clean_id(cei)
-    cei = '%0.012i' % int(cei)
-    if validate and not validate_cei(cei):
-        raise ValueError('Invalid CEI: {0}'.format(cei))
-    return cei
+    padded = pad_id(cei, '%0.012i')
+    if validate:
+        return padded, validate_cei(padded)
+    return padded
 
 def random_cei(formatted=True):
     """Create a random, valid CEI identifier."""

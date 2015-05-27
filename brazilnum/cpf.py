@@ -6,7 +6,7 @@ import re
 import random
 from operator import mul
 
-from .util import clean_id
+from .util import clean_id, pad_id
 
 """
 Functions for working with Brazilian CPF identifiers.
@@ -56,11 +56,10 @@ def format_cpf(cpf):
 
 def pad_cpf(cpf, validate=True):
     """Takes a CPF that probably had leading zeros and pads it."""
-    cpf = clean_id(cpf)
-    cpf = '%0.011i' % int(cpf)
-    if validate and not validate_cpf(cpf):
-        raise ValueError('Invalid CPF: {0}'.format(cpf))
-    return cpf
+    padded = pad_id(cpf, '%0.011i')
+    if validate:
+        return padded, validate_cpf(padded)
+    return padded
 
 def random_cpf(formatted=True):
     """Create a random, valid CPF identifier."""

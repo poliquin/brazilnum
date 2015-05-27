@@ -14,3 +14,10 @@ def clean_id(identifier):
     if isinstance(identifier, int):
         return str(identifier)
     return NONDIGIT.sub('', identifier)
+
+
+def pad_id(identifier, fmt):
+    """Pad an identifier with leading zeros."""
+    if not isinstance(identifier, int):
+        identifier = int(clean_id(identifier))
+    return fmt % identifier
