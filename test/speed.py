@@ -86,8 +86,9 @@ print('Validate 1,000 CPF: {0} seconds'.format(time_per_thousand_cpf))
 
 # time parsing of CNPJ
 def parse_cnpj_speed():
+    """Parse CNPJ read from file."""
     for i in CNPJ:
-        parse_cnpj(i)
+        parse_cnpj(int(i['cnpj']))
 
 
 cnpj_parse_time = timeit.timeit(parse_cnpj_speed, number=reps)
@@ -96,12 +97,13 @@ print('Parse 200 CNPJ: {0} seconds'.format(cnpj_parse_time))
 
 # time padding of all identifiers
 def pad_speed():
+    """Pad integer identifiers."""
     for i in CNPJ:
-        pad_cnpj(i, validate=False)
+        pad_cnpj(int(i['cnpj']), validate=False)
     for i in PIS:
-        pad_pis(i, validate=False)
+        pad_pis(int(i['pis']), validate=False)
     for i in CPF:
-        pad_cpf(i, validate=False)
+        pad_cpf(int(i['cpf']), validate=False)
 
 
 pad_time = timeit.timeit(pad_speed, number=reps)

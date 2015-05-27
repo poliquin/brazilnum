@@ -15,6 +15,8 @@ PIS_WEIGHTS = [3, 2, 9, 8, 7, 6, 5, 4, 3, 2]
 
 def clean_pis(pis):
     """Takes a PIS/PASEP and turns it into a string of only numbers."""
+    if isinstance(pis, int):
+        return str(pis)
     return NONDIGIT.sub('', str(pis))
 
 def validate_pis(pis):

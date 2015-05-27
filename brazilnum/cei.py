@@ -14,6 +14,8 @@ CEI_WEIGHTS = [7, 4, 1, 8, 5, 2, 1, 6, 3, 7, 4]
 
 def clean_cei(cei):
     """Takes a CEI and turns it into a string of only numbers."""
+    if isinstance(cei, int):
+        return str(cei)
     return NONDIGIT.sub('', str(cei))
 
 def validate_cei(cei):

@@ -14,6 +14,8 @@ CPF_WEIGHTS  = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
 def clean_cpf(cpf):
     """Takes a CPF and turns it into a string of only numbers."""
+    if isinstance(cpf, int):
+        return str(cpf)
     return NONDIGIT.sub('', str(cpf))
 
 def validate_cpf(cpf):

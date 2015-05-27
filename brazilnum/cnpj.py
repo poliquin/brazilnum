@@ -18,6 +18,8 @@ CNPJ = namedtuple('CNPJ', ['cnpj', 'firm', 'establishment', 'check', 'valid'])
 
 def clean_cnpj(cnpj):
     """Takes a CNPJ and turns it into a string of only numbers."""
+    if isinstance(cnpj, int):
+        return str(cnpj)
     return NONDIGIT.sub('', str(cnpj))
 
 def validate_cnpj(cnpj):
