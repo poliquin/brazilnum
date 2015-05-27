@@ -132,47 +132,6 @@ Padding works the same way for PIS/PASEP and CPF numbers:
     ('04193675867', False)
 
 
-#### Check Digits
-If you're interested in the check digits, there are functions for
-calculating them that return integers:
-
-    >>> from brazilnum.cnpj import cnpj_check_digits
-    >>> cnpj_check_digits('02.558.157/0001-62')
-    (6, 2)
-
-    >>> from brazilnum.cei import cei_check_digit
-    >>> cei_check_digit('11.583.00249/85')
-    5
-
-    >>> from brazilnum.cpf import cpf_check_digits
-    >>> cpf_check_digits('041.936.758-66')
-    (6, 6)
-
-    >>> from brazilnum.pis import pis_check_digit
-    >>> pis_check_digit('125.6124.131-0')
-    0
-
-CNPJ check digits are calculated from the first 12 digits:
-
-    >>> cnpj_check_digits('025581570001')
-    (6, 2)
-
-The CEI check digit is calculated from the first 11 digits:
-
-    >>> cei_check_digit('11583002498')
-    5
-
-CPF check digits are calculated from the first 9 digits:
-
-    >>> cpf_check_digits('041936758')
-    (6, 6)
-
-The PIS/PASEP check digit is calculated from the first 10 digits:
-
-    >>> pis_check_digit('1256124131')
-    0
-
-
 #### CNPJ Parsing
 The first 8 digits of CNPJs identify a firm, and the following 4 digits
 identify a specific business establishment owned by that firm.  Headquarters is
@@ -220,3 +179,44 @@ The same thing exists for PIS/PASEP and CPF identifiers:
 
     from brazilnum.cpf import random_cpf
     random_cpf()
+
+
+#### Check Digits
+If you're interested in the check digits, there are functions for
+calculating them that return integers:
+
+    >>> from brazilnum.cnpj import cnpj_check_digits
+    >>> cnpj_check_digits('02.558.157/0001-62')
+    (6, 2)
+
+    >>> from brazilnum.cei import cei_check_digit
+    >>> cei_check_digit('11.583.00249/85')
+    5
+
+    >>> from brazilnum.cpf import cpf_check_digits
+    >>> cpf_check_digits('041.936.758-66')
+    (6, 6)
+
+    >>> from brazilnum.pis import pis_check_digit
+    >>> pis_check_digit('125.6124.131-0')
+    0
+
+CNPJ check digits are calculated from the first 12 digits:
+
+    >>> cnpj_check_digits('025581570001')
+    (6, 2)
+
+The CEI check digit is calculated from the first 11 digits:
+
+    >>> cei_check_digit('11583002498')
+    5
+
+CPF check digits are calculated from the first 9 digits:
+
+    >>> cpf_check_digits('041936758')
+    (6, 6)
+
+The PIS/PASEP check digit is calculated from the first 10 digits:
+
+    >>> pis_check_digit('1256124131')
+    0
