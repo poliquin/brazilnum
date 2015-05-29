@@ -23,14 +23,13 @@ def validate_cpf(cpf, autopad=True):
     if len(cpf) != 11:
         return validate_cpf(pad_cpf(cpf), False) if autopad else False
     digits = [int(k) for k in cpf]  # identifier digits
-    checks = digits[-2:]  # last two digits are check digits
     # validate the first check digit
     cs = (sum(w * k for w, k in zip(CPF_WEIGHTS, digits[:-2])) % 11) % 10
-    if cs != checks[0]:
+    if cs != digits[-2]:
         return False  # first check digit is not correct
     # validate the second check digit
     cs = (sum(w * k for w, k in zip(CPF_WEIGHTS, digits[1:-1])) % 11) % 10
-    if cs != checks[1]:
+    if cs != digits[-1]:
         return False  # second check digit is not correct
     # both check digits are correct
     return True

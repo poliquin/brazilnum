@@ -85,9 +85,8 @@ def pad_cnpj(cnpj, validate=False):
 
 def parse_cnpj(cnpj, formatted=True):
     """Split CNPJ into firm, establishment, and check digits, and validate."""
-    cnpj = pad_cnpj(cnpj)
+    cnpj, valid = pad_cnpj(cnpj, validate=True)
     estbl, check = cnpj[8:12], cnpj[12:]
-    valid = validate_cnpj(cnpj)
     if formatted:
         cnpj = format_cnpj(cnpj)
         firm = cnpj[:10]
