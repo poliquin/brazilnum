@@ -22,7 +22,7 @@ def validate_pis(pis, autopad=True):
     # all complete PIS/PASEP are 11 digits long
     if len(pis) != 11:
         return validate_pis(pad_pis(pis), False) if autopad else False
-    return int(pis[-1]) == pis_check_digit(pis)
+    return int(pis[-1]) == _pis_check(pis)
 
 
 def pis_check_digit(pis):
@@ -31,10 +31,7 @@ def pis_check_digit(pis):
     if len(pis) < 10:
         raise ValueError(
             'PIS/PASEP must be at least 10 digits: {0}'.format(pis))
-    digits = [int(k) for k in pis[:11]]
-    # find check digit
-    cs = sum(w * k for w, k in zip(PIS_WEIGHTS, digits)) % 11
-    return 0 if cs < 2 else 11 - cs
+    return _pis_check(pis)
 
 
 def pis_check_digits(pis):
@@ -64,3 +61,11 @@ def random_pis(formatted=True):
     if formatted:
         return format_pis(pis)
     return pis
+
+
+def _pis_check(pis):
+    """Calculate check digit from string."""
+    digits = [int(k) for k in pis[:11]]
+    # find check digit
+    cs = sum(w * k for w, k in zip(PIS_WEIGHTS, digits)) % 11
+    return 0 if cs < 2 else 11 - cs
