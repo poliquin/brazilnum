@@ -4,7 +4,6 @@ from __future__ import absolute_import
 
 import re
 import random
-from operator import mul
 
 from .util import clean_id, pad_id
 
@@ -63,7 +62,7 @@ def random_cei(formatted=True):
 
 def _cei_check(digits):
     """Calculate check digit from iterable of integers."""
-    digsum = sum(mul(*k) for k in zip(CEI_WEIGHTS, digits))
+    digsum = sum(w * k for w, k in zip(CEI_WEIGHTS, digits))
     modulo = (sum(divmod(digsum % 100, 10)) % 10)
     if modulo == 0:
         return 0

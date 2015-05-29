@@ -4,7 +4,6 @@ from __future__ import absolute_import
 
 import re
 from random import randint
-from operator import mul
 
 from .util import clean_id, pad_id
 
@@ -34,7 +33,7 @@ def pis_check_digit(pis):
             'PIS/PASEP must be at least 10 digits: {0}'.format(pis))
     digits = [int(k) for k in pis[:11]]
     # find check digit
-    cs = sum([mul(*k) for k in zip(PIS_WEIGHTS, digits)]) % 11
+    cs = sum(w * k for w, k in zip(PIS_WEIGHTS, digits)) % 11
     return 0 if cs < 2 else 11 - cs
 
 

@@ -4,7 +4,6 @@ from __future__ import absolute_import
 
 import re
 import random
-from operator import mul
 
 from .util import clean_id, pad_id
 
@@ -26,11 +25,11 @@ def validate_cpf(cpf, autopad=True):
     digits = [int(k) for k in cpf]  # identifier digits
     checks = digits[-2:]  # last two digits are check digits
     # validate the first check digit
-    cs = (sum([mul(*k) for k in zip(CPF_WEIGHTS, digits[:-2])]) % 11) % 10
+    cs = (sum(w * k for w, k in zip(CPF_WEIGHTS, digits[:-2])) % 11) % 10
     if cs != checks[0]:
         return False  # first check digit is not correct
     # validate the second check digit
-    cs = (sum([mul(*k) for k in zip(CPF_WEIGHTS, digits[1:-1])]) % 11) % 10
+    cs = (sum(w * k for w, k in zip(CPF_WEIGHTS, digits[1:-1])) % 11) % 10
     if cs != checks[1]:
         return False  # second check digit is not correct
     # both check digits are correct
@@ -44,10 +43,10 @@ def cpf_check_digits(cpf):
         raise ValueError('CPF must have at least 9 digits: {0}'.format(cpf))
     digits = [int(k) for k in cpf[:10]]
     # find the first check digit
-    cs = (sum([mul(*k) for k in zip(CPF_WEIGHTS, digits)]) % 11) % 10
+    cs = (sum(w * k for w, k in zip(CPF_WEIGHTS, digits)) % 11) % 10
     # find the second check digit
     digits.append(cs)
-    return cs, (sum([mul(*k) for k in zip(CPF_WEIGHTS, digits[1:])]) % 11) % 10
+    return cs, (sum(w * k for w, k in zip(CPF_WEIGHTS, digits[1:])) % 11) % 10
 
 
 def format_cpf(cpf):
