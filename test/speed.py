@@ -9,9 +9,10 @@ sys.path.append('..')
 from brazilnum.cnpj import validate_cnpj, parse_cnpj, pad_cnpj
 from brazilnum.pis import validate_pis, pad_pis
 from brazilnum.cpf import validate_cpf, pad_cpf
+from brazilnum.muni import validate_muni
 
 """
-Test speed of CNPJ, CPF, and PIS/PASEP functions.
+Test speed of CNPJ, CPF, PIS/PASEP, and municipio functions.
 
 """
 
@@ -31,6 +32,12 @@ with open('pis.csv', 'r') as fh:
 with open('cpf.csv', 'r') as fh:
     rdr = csv.DictReader(fh)
     CPF = list(rdr)
+    fh.close()
+
+# read all municipio codes along with bad versions
+with open('munis.csv', 'r') as fh:
+    rdr = csv.DictReader(fh)
+    MUNI = list(rdr)
     fh.close()
 
 
@@ -61,6 +68,15 @@ def cpf_speed():
             print('CPF Validation failed: {0}'.format(c['cpf']))
 
 
+def muni_speed():
+    """Check speed of validating all municipio numbers plus bad versions."""
+    for m in MUNI:
+        try:
+            assert int(m['good']) == validate_muni(m['muni'])
+        except:
+            print('Municipio validation failed: {0}'.format(m['muni']))
+
+
 reps = 1000
 
 # time validation of CNPJ, 100 good and 100 bad
@@ -82,6 +98,11 @@ cpf_time = timeit.timeit(cpf_speed, number=reps)
 time_per_thousand_cpf = (cpf_time / (200. * reps)) * 1000.
 
 print('Validate 1,000 CPF: {0} seconds'.format(time_per_thousand_cpf))
+
+
+# time validation of municipios
+muni_time = timeit.timeit(muni_speed, number=2)
+print('Validate municipios: {0} seconds'.format(muni_time))
 
 
 # time parsing of CNPJ
