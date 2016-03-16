@@ -173,9 +173,7 @@ Códigos de Endereçamentos Postais (zip codes) can be formatted and parsed:
     >>> parse_cep('01255-080', numeric=False)
     CEP(cep='001255-080', region='0', subregion='00', sector='001', subsector='0012', division='00125', suffix='080')
 
-Correios has more information about the [structure of CEP](cep).
-
-[cep]: http://www.correios.com.br/para-voce/precisa-de-ajuda/o-que-e-cep-e-por-que-usa-lo/estrutura-do-cep
+Correios has more information about the [structure of CEP](http://www.correios.com.br/para-voce/precisa-de-ajuda/o-que-e-cep-e-por-que-usa-lo/estrutura-do-cep).
 
 
 #### Random Identifiers
