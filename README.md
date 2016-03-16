@@ -176,6 +176,28 @@ Códigos de Endereçamentos Postais (zip codes) can be formatted and parsed:
 Correios has more information about the [structure of CEP](http://www.correios.com.br/para-voce/precisa-de-ajuda/o-que-e-cep-e-por-que-usa-lo/estrutura-do-cep).
 
 
+#### Municípios (Municipalities)
+
+Validation of IBGE município (municipal) identifiers is also possible:
+
+    >>> from brazilnum.muni import validate_muni
+    >>> validate_muni(3550308)  # São Paulo
+    True
+
+    >>> validate_muni(4305871)  # Coronel Barros (see note below)
+    True
+
+**Note** that 9 true codes do not follow the correct verification pattern. ENCAT
+has a [technical note](http://www.sefaz.al.gov.br/nfe/notas_tecnicas/NT2008.004.pdf)
+about this issue. The program correctly handles special codes like Coronel
+Barros, RS (see above).
+
+If you need a list of municípios with names and coordinates, see
+[poliquin/br-localidades](https://github.com/poliquin/br-localidades). If you
+need historical and current codes with names, see
+[paulofreitas/dtb-ibge](https://github.com/paulofreitas/dtb-ibge).
+
+
 #### Random Identifiers
 If you need random CNPJ for database testing, use the ``random_cnpj`` function,
 which can return either unformatted or formatted identifiers:
