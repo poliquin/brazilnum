@@ -1,8 +1,8 @@
 Validate Brazilian Identification Numbers
 =========================================
 
-Python functions for working with CNPJ, CEI, CPF, and PIS/PASEP numbers, which
-identify firms and people in Brazil.
+Python functions for working with CNPJ, CEI, CPF, PIS/PASEP, and CEP numbers,
+which identify firms, people, and places in Brazil.
 
 Installation
 ------------
@@ -92,7 +92,7 @@ returns a string:
     >>> from brazilnum.util import clean_id
     >>> clean_id('02.558.157/0001-62')
     '02558157000162'
-   
+
     >>> clean_id(115830024985)
     '115830024985'
 
@@ -102,7 +102,7 @@ zeros are missing. You can pad and validate these in one step:
     >>> from brazilnum.cnpj import pad_cnpj
     >>> pad_cnpj(2558157000162, validate=True)
     ('02558157000162', True)
-    
+
     >>> pad_cnpj(2558157000155, validate=True)
     ('02558157000155', False)
 
@@ -144,7 +144,7 @@ full CNPJ from the first 8 digits and a given establishment number:
 
     >>> cnpj_from_firm_id('02.558.157', establishment='0002')
     '02558157000243'
-    
+
     >>> cnpj_from_firm_id('02.558.157', establishment='0002', formatted=True)
     '02.558.157/0002-43'
 
@@ -157,6 +157,25 @@ CNPJ can be parsed into firm, establishment, and check digit components:
 
     >>> parse_cnpj('02.558.157/0001-62', formatted=False)
     CNPJ(cnpj=2558157000162, firm=2558157, establishment=1, check=(6, 2), valid=True)
+
+
+#### CEP Parsing
+
+Códigos de Endereçamentos Postais (zip codes) can be formatted and parsed:
+
+    >>> from brazilnum.cep import format_cep, parse_cep
+    >>> format_cep(1255080)
+    '01255-080'
+
+    >>> parse_cep('01255-080', numeric=True)
+    CEP(cep=1255080, region=0, subregion=0, sector=1, subsector=12, division=125, suffix=80)
+
+    >>> parse_cep('01255-080', numeric=False)
+    CEP(cep='001255-080', region='0', subregion='00', sector='001', subsector='0012', division='00125', suffix='080')
+
+Correios has more information about the [structure of CEP](cep).
+
+[cep]: http://www.correios.com.br/para-voce/precisa-de-ajuda/o-que-e-cep-e-por-que-usa-lo/estrutura-do-cep
 
 
 #### Random Identifiers
