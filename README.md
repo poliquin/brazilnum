@@ -1,8 +1,8 @@
 Validate Brazilian Identification Numbers
 =========================================
 
-Python functions for working with CNPJ, CEI, CPF, PIS/PASEP, and CEP numbers,
-which identify firms, people, and places in Brazil.
+Python functions for working with CNPJ, CEI, CPF, PIS/PASEP, CEP, and município
+numbers, which identify firms, people, and places in Brazil.
 
 Installation
 ------------
