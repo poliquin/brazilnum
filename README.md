@@ -164,14 +164,14 @@ CNPJ can be parsed into firm, establishment, and check digit components:
 Códigos de Endereçamentos Postais (zip codes) can be formatted and parsed:
 
     >>> from brazilnum.cep import format_cep, parse_cep
-    >>> format_cep(1255080)
-    '01255-080'
+    >>> format_cep(13165000)
+    '13165-000'
 
     >>> parse_cep('01255-080', numeric=True)
-    CEP(cep=1255080, region=0, subregion=0, sector=1, subsector=12, division=125, suffix=80)
+    CEP(cep=1255080, region=0, subregion=1, sector=12, subsector=125, division=1255, suffix=80)
 
     >>> parse_cep('01255-080', numeric=False)
-    CEP(cep='001255-080', region='0', subregion='00', sector='001', subsector='0012', division='00125', suffix='080')
+    CEP(cep='01255-080', region='0', subregion='01', sector='012', subsector='0125', division='01255', suffix='080')
 
 Correios has more information about the [structure of CEP](http://www.correios.com.br/para-voce/precisa-de-ajuda/o-que-e-cep-e-por-que-usa-lo/estrutura-do-cep).
 

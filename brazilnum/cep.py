@@ -19,13 +19,12 @@ def format_cep(cep):
     cep = clean_id(cep)
     dig = len(cep)
 
-    if dig == 0 or dig > 8 or cep == '0':
-        raise ValueError('Invalid CEP code: {0}'.format(cep))
-
     if dig == 4 or dig == 5:
         cep = '0'*(5-dig) + cep + '000'
+    elif dig == 7 or dig == 8:
+        cep = '0'*(8-dig) + cep
     else:
-        cep = '0' + cep + '0'*(7-dig)
+        raise ValueError('Invalid CEP code: {0}'.format(cep))
 
     return '{0}-{1}'.format(cep[:-3], cep[-3:])
 
