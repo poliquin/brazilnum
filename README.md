@@ -167,6 +167,12 @@ Códigos de Endereçamentos Postais (zip codes) can be formatted and parsed:
     >>> format_cep(13165000)
     '13165-000'
 
+    >>> format_cep(1002010)
+    '01002-010'
+
+    >>> format_cep(73080)
+    '73080-000'
+
     >>> parse_cep('01255-080', numeric=True)
     CEP(cep=1255080, region=0, subregion=1, sector=12, subsector=125, division=1255, suffix=80)
 
