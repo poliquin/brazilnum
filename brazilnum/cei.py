@@ -19,9 +19,15 @@ CEI_WEIGHTS = [7, 4, 1, 8, 5, 2, 1, 6, 3, 7, 4]
 def validate_cei(cei, autopad=True):
     """Check whether CEI is valid. Optionally pad if too short."""
     cei = clean_id(cei)
+
     # all complete CEI are 12 digits long
-    if len(cei) != 12:
-        return validate_cei(pad_cei(cei), False) if autopad else False
+    if len(cei) < 12:
+        if not autopad:
+            return False
+        cei = pad_cei(cei)
+
+    elif len(cei) > 12:
+        return False
 
     if cei == '000000000000':
         return False
