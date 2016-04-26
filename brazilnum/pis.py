@@ -22,6 +22,10 @@ def validate_pis(pis, autopad=True):
     # all complete PIS/PASEP are 11 digits long
     if len(pis) != 11:
         return validate_pis(pad_pis(pis), False) if autopad else False
+
+    if pis == '00000000000':
+        return False
+
     return int(pis[-1]) == _pis_check(pis)
 
 
