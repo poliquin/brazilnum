@@ -5,7 +5,7 @@ from distutils.core import setup
 setup(
     name='brazilnum',
     packages=['brazilnum'],
-    version='0.8.6',
+    version='0.8.7',
     description="Validate Brazilian CNPJ, CEI, CPF, PIS/PASEP, CEP, and municipal numbers",
     author='Chris Poliquin',
     author_email='cpoliquin@hbs.edu',
