@@ -22,6 +22,10 @@ def validate_cpf(cpf, autopad=True):
     # all complete CPF are 11 digits long
     if len(cpf) != 11:
         return validate_cpf(pad_cpf(cpf), False) if autopad else False
+
+    if cpf == '00000000000':
+        return False
+
     digits = [int(k) for k in cpf]  # identifier digits
     # validate the first check digit
     cs = (sum(w * k for w, k in zip(CPF_WEIGHTS, digits[:-2])) % 11) % 10
