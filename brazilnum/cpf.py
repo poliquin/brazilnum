@@ -19,9 +19,15 @@ CPF_WEIGHTS = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 def validate_cpf(cpf, autopad=True):
     """Check whether CPF is valid."""
     cpf = clean_id(cpf)
+
     # all complete CPF are 11 digits long
-    if len(cpf) != 11:
-        return validate_cpf(pad_cpf(cpf), False) if autopad else False
+    if len(cpf) < 11:
+        if not autopad:
+            return False
+        cpf = pad_cpf(cpf)
+
+    elif len(cpf) > 11:
+        return False
 
     if cpf == '00000000000':
         return False
