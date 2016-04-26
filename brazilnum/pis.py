@@ -19,9 +19,15 @@ PIS_WEIGHTS = [3, 2, 9, 8, 7, 6, 5, 4, 3, 2]
 def validate_pis(pis, autopad=True):
     """Check whether PIS/PASEP is valid. Optionally pad if too short."""
     pis = clean_id(pis)
+
     # all complete PIS/PASEP are 11 digits long
-    if len(pis) != 11:
-        return validate_pis(pad_pis(pis), False) if autopad else False
+    if len(pis) < 11:
+        if not autopad:
+            return False
+        pis = pad_pis(pis)
+
+    elif len(pis) > 11:
+        return False
 
     if pis == '00000000000':
         return False
