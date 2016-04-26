@@ -23,6 +23,11 @@ def validate_cnpj(cnpj, autopad=True):
     # all complete CNPJ are 14 digits long
     if len(cnpj) != 14:
         return validate_cnpj(pad_cnpj(cnpj), False) if autopad else False
+
+    # 0 is invalid; smallest valid CNPJ is 191
+    if cnpj == '00000000000000':
+        return False
+
     digits = [int(k) for k in cnpj[:13]]  # identifier digits
     # validate the first check digit
     cs = sum(w * k for w, k in zip(CNPJ_FIRST_WEIGHTS, digits[:-1])) % 11
