@@ -22,6 +22,10 @@ def validate_cei(cei, autopad=True):
     # all complete CEI are 12 digits long
     if len(cei) != 12:
         return validate_cei(pad_cei(cei), False) if autopad else False
+
+    if cei == '000000000000':
+        return False
+
     digits = [int(k) for k in cei]  # identifier digits
     return _cei_check(digits[:-1]) == digits[-1]
 
