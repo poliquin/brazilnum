@@ -33,6 +33,10 @@ def validate_muni(muni):
     # municipal codes are 7 digits long, and cannot start with 0
     if len(muni) != 7:
         return False
+
+    if muni[0] == '0':
+        return False
+
     digits = [int(k) for k in muni]
     valid = _muni_check(digits[:-1]) == digits[-1]
     return valid or muni in SHIM  # need to check exceptions list
