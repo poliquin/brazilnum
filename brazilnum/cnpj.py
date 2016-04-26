@@ -20,9 +20,15 @@ CNPJ = namedtuple('CNPJ', ['cnpj', 'firm', 'establishment', 'check', 'valid'])
 def validate_cnpj(cnpj, autopad=True):
     """Check whether CNPJ is valid. Optionally pad if too short."""
     cnpj = clean_id(cnpj)
+
     # all complete CNPJ are 14 digits long
-    if len(cnpj) != 14:
-        return validate_cnpj(pad_cnpj(cnpj), False) if autopad else False
+    if len(cnpj) < 14:
+        if not autopad:
+            return False
+        cnpj = pad_cnpj(cnpj)
+
+    elif len(cnpj) > 14:
+        return False
 
     # 0 is invalid; smallest valid CNPJ is 191
     if cnpj == '00000000000000':
