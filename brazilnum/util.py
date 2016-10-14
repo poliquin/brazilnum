@@ -19,5 +19,11 @@ def clean_id(identifier):
 def pad_id(identifier, fmt):
     """Pad an identifier with leading zeros."""
     if not isinstance(identifier, int):
-        identifier = int(clean_id(identifier))
+        identifier = clean_id(identifier)
+
+        if identifier == '':
+            identifier = 0
+        else:
+            identifier = int(identifier)
+
     return fmt % identifier
