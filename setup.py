@@ -8,7 +8,7 @@ setup(
     version='0.8.8',
     description="Validate Brazilian CNPJ, CEI, CPF, PIS/PASEP, CEP, and municipal numbers",
     author='Chris Poliquin',
-    author_email='cpoliquin@hbs.edu',
+    author_email='chrispoliquin@gmail.com',
     url='https://github.com/poliquin/brazilnum',
     keywords=['brazil', 'brasil', 'cnpj', 'cei', 'cpf', 'pis', 'pasep', 'cep'],
     classifiers=[
