@@ -5,12 +5,10 @@ build-backend = "hatchling.build"
 [project]
 name = "brazilnum"
 version = "0.8.9"
-authors = [
-  { name="Chris Poliquin", email="cpoliquin@hbs.edu" },
-]
-license = {file = "LICENSE"}
+authors = [{ name = "Chris Poliquin", email = "cpoliquin@hbs.edu" }]
+license = { file = "LICENSE" }
 description = "Validate Brazilian CNPJ, CEI, CPF, PIS/PASEP, CEP, and municipal numbers"
-readme = "README.rst"
+readme = "README.md"
 requires-python = ">=3.8"
 classifiers = [
     "Intended Audience :: Developers",
@@ -22,20 +20,17 @@ classifiers = [
     "Operating System :: OS Independent",
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
-    "Topic :: Utilities"
+    "Topic :: Utilities",
 ]
-keywords=["brazil", "brasil", "cnpj", "cei", "cpf", "pis", "pasep", "cep"]
+
+keywords = ["brazil", "brasil", "cnpj", "cei", "cpf", "pis", "pasep", "cep"]
+
 dependencies = []
-
-[project.urls]
-Homepage = "https://github.com/poliquin/brazilnum"
-
-pythonpath = [
-    "src"
-]
-testpaths = [
-    "test",
-]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/brazilnum"]
+
+[project.urls]
+Homepage = "https://github.com/poliquin/brazilnum"
+Repository = "https://github.com/poliquin/brazilnum.git"
+Issues = "https://github.com/poliquin/brazilnum/issues"
