@@ -1,41 +1,41 @@
 #!/usr/bin/env python
-
-from __future__ import print_function
+"""
+Test speed of CNPJ, CPF, PIS/PASEP, and municipio functions.
+"""
 import sys
 import timeit
 import csv
+import os
 
-sys.path.append('..')
-from brazilnum.cnpj import validate_cnpj, parse_cnpj, pad_cnpj
-from brazilnum.pis import validate_pis, pad_pis
-from brazilnum.cpf import validate_cpf, pad_cpf
-from brazilnum.muni import validate_muni
+sys.path.append(os.path.join('.', 'src'))
 
-"""
-Test speed of CNPJ, CPF, PIS/PASEP, and municipio functions.
+from brazilnum.cnpj import validate_cnpj, parse_cnpj, pad_cnpj  # noqa: E402
+from brazilnum.pis import validate_pis, pad_pis  # noqa: E402
+from brazilnum.cpf import validate_cpf, pad_cpf  # noqa: E402
+from brazilnum.muni import validate_muni  # noqa: E402
 
-"""
+FIXTURES_DIR = 'test'
 
 # read sample of 200 CNPJ numbers (100 good)
-with open('cnpj.csv', 'r') as fh:
+with open(os.path.join(FIXTURES_DIR, 'cnpj.csv'), 'r') as fh:
     rdr = csv.DictReader(fh)
     CNPJ = list(rdr)
     fh.close()
 
 # read sample of 200 fake PIS/PASEP numbers (100 good)
-with open('pis.csv', 'r') as fh:
+with open(os.path.join(FIXTURES_DIR, 'pis.csv'), 'r') as fh:
     rdr = csv.DictReader(fh)
     PIS = list(rdr)
     fh.close()
 
 # read sample of 200 fake CPF numbers (100 good)
-with open('cpf.csv', 'r') as fh:
+with open(os.path.join(FIXTURES_DIR, 'cpf.csv'), 'r') as fh:
     rdr = csv.DictReader(fh)
     CPF = list(rdr)
     fh.close()
 
 # read all municipio codes along with bad versions
-with open('munis.csv', 'r') as fh:
+with open(os.path.join(FIXTURES_DIR, 'munis.csv'), 'r') as fh:
     rdr = csv.DictReader(fh)
     MUNI = list(rdr)
     fh.close()
@@ -46,8 +46,8 @@ def cnpj_speed():
     for c in CNPJ:
         try:
             assert int(c['good']) == validate_cnpj(c['cnpj'])
-        except:
-            print('CNPJ Validation failed: {0}'.format(c['cnpj']))
+        except ValueError as e:
+            print('CNPJ validation failed with {0}: {1}'.format(c['cnpj'], e))
 
 
 def pis_speed():
@@ -55,8 +55,11 @@ def pis_speed():
     for c in PIS:
         try:
             assert int(c['good']) == validate_pis(c['pis'])
-        except:
-            print('PIS/PASEP Validation failed: {0}'.format(c['pis']))
+        except ValueError as e:
+            print(
+                'PIS/PASEP validation failed with {0}: {1}'.format(
+                    c['pis'], e)
+            )
 
 
 def cpf_speed():
@@ -64,8 +67,8 @@ def cpf_speed():
     for c in CPF:
         try:
             assert int(c['good']) == validate_cpf(c['cpf'])
-        except:
-            print('CPF Validation failed: {0}'.format(c['cpf']))
+        except ValueError as e:
+            print('CPF validation failed with {0}: {1}'.format(c['cpf'], e))
 
 
 def muni_speed():
@@ -73,8 +76,11 @@ def muni_speed():
     for m in MUNI:
         try:
             assert int(m['good']) == validate_muni(m['muni'])
-        except:
-            print('Municipio validation failed: {0}'.format(m['muni']))
+        except ValueError as e:
+            print('Municipio validation failed with {0}: {1}'.format(
+                m['muni'],
+                e)
+            )
 
 
 reps = 1000
