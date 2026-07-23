@@ -4,7 +4,14 @@
 *.swp
 .DS_Store
 
+# environments and caches
+.venv/
+__pycache__/
+.pytest_cache/
+.mypy_cache/
+
 # distribution
 MANIFEST
+build/
 dist/
-
+brazilnum.egg-info/

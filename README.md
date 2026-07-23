@@ -12,7 +12,7 @@ Installation
 Usage Examples
 --------------
 
-Works with Python 2.7 and 3.
+Requires Python 3.9 or newer.
 
 
 #### Validation Functions
