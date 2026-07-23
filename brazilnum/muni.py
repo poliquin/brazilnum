@@ -1,7 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf8 -*-
-
-from __future__ import absolute_import
 
 from .util import clean_id
 

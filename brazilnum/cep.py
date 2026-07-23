@@ -1,5 +1,4 @@
 
-from __future__ import absolute_import
 from collections import namedtuple
 
 from .util import clean_id
