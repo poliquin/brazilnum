@@ -1,0 +1,45 @@
+[build-system]
+requires = ["setuptools>=61", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "brazilnum"
+version = "0.9.0"
+description = "Validate Brazilian CNPJ, CEI, CPF, PIS/PASEP, CEP, and municipal numbers"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [
+  { name = "Chris Poliquin", email = "chrispoliquin@gmail.com" }
+]
+requires-python = ">=3.9"
+keywords = ["brazil", "brasil", "cnpj", "cei", "cpf", "pis", "pasep", "cep"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+  "Operating System :: OS Independent",
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Developers",
+  "Topic :: Utilities"
+]
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/poliquin/brazilnum"
+Repository = "https://github.com/poliquin/brazilnum"
+
+[project.optional-dependencies]
+dev = ["build", "pytest", "twine"]
+
+[tool.setuptools]
+packages = ["brazilnum"]
+
+[tool.pytest.ini_options]
+addopts = "--doctest-glob=README.md"
+testpaths = ["README.md"]
+pythonpath = ["."]
