@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "brazilnum"
-version = "0.9.0"
+version = "0.10.0"
 description = "Validate Brazilian CNPJ, CEI, CPF, PIS/PASEP, CEP, and municipal numbers"
 readme = "README.md"
 license = "MIT"
