@@ -33,6 +33,30 @@ def test_validate_cnpj():
     assert cnpj.validate_cnpj('') is False
 
 
+def test_validate_cnpj_alphanumeric():
+    """Check validation of alphanumeric CNPJ identifiers (RFB, 07/2026)."""
+
+    assert cnpj.validate_cnpj('XPB30AW3000184') is True
+    assert cnpj.validate_cnpj('XP.B30.AW3/0001-84') is True
+
+    # lowercase letters are normalized to uppercase
+    assert cnpj.validate_cnpj('xp.b30.aw3/0001-84') is True
+
+    # incorrect check digits are detected
+    assert cnpj.validate_cnpj('XPB30AW3000185') is False
+
+    # the two check digits are always numeric, never letters
+    assert cnpj.validate_cnpj('XPB30AW30001AB') is False
+
+    # short alphanumeric identifiers are padded with leading zeros
+    assert cnpj.validate_cnpj('PB3AW3W000133') is True
+    assert cnpj.validate_cnpj('PB3AW3W000133', autopad=False) is False
+
+    # because CNPJ can contain letters, stray letters in the input make
+    # an identifier invalid as of version 0.9.0
+    assert cnpj.validate_cnpj('CNPJ: 02.558.157/0001-62') is False
+
+
 def test_cnpj_check_digits():
     """Test calculation of check digits for a CNPJ identifier."""
 
@@ -46,8 +70,11 @@ def test_cnpj_check_digits():
     assert cnpj.cnpj_check_digits('000346160001') == (8, 3)
     assert cnpj.cnpj_check_digits(112775550001) == (0, 0)
 
-    # identifiers less than 12 digits produce an error
-    with pytest.raises(ValueError, match=r".*12 digits.*"):
+    # check digits for alphanumeric CNPJ are still numeric
+    assert cnpj.cnpj_check_digits('XPB30AW30001') == (8, 4)
+
+    # identifiers less than 12 characters produce an error
+    with pytest.raises(ValueError, match=r".*12 characters.*"):
         cnpj.cnpj_check_digits('50001')
 
 
@@ -63,6 +90,9 @@ def test_cnpj_from_firm_id():
         '02341506', establishment='0002', formatted=True
     ) == '02.341.506/0002-70'
 
+    # firm identifiers can be alphanumeric
+    assert cnpj.cnpj_from_firm_id('XPB30AW3') == 'XPB30AW3000184'
+
 
 def test_format_cnpj():
     """Test 00.000.000/0000-00 formatting of CNPJ."""
@@ -76,6 +106,9 @@ def test_format_cnpj():
 
     # can format integers
     assert cnpj.format_cnpj(11277555000100) == '11.277.555/0001-00'
+
+    # can format alphanumeric identifiers
+    assert cnpj.format_cnpj('XPB30AW3000184') == 'XP.B30.AW3/0001-84'
 
 
 def test_pad_cnpj():
@@ -92,6 +125,17 @@ def test_pad_cnpj():
     assert cnpj.pad_cnpj('08173643000263') == '08173643000263'
     assert cnpj.pad_cnpj('8173643000263')  == '08173643000263'
     assert cnpj.pad_cnpj(8173643000263)    == '08173643000263'
+
+    # alphanumeric identifiers are padded as strings
+    assert cnpj.pad_cnpj('PB3AW3W000133') == '0PB3AW3W000133'
+
+    # can pad and validate in one step
+    assert cnpj.pad_cnpj(360305000104, validate=True) == (
+        '00360305000104', True
+    )
+    assert cnpj.pad_cnpj(8173643000263, validate=True) == (
+        '08173643000263', False
+    )
 
 
 def test_parse_cnpj():
@@ -112,6 +156,15 @@ def test_parse_cnpj():
         76694959000241, 76694959, 2, (4, 1), False
     )
 
+    # alphanumeric CNPJ cannot be represented as integers, so components
+    # are strings even with formatted=False; check digits remain integers
+    assert cnpj.parse_cnpj('XPB30AW3000184') == CNPJ(
+        'XP.B30.AW3/0001-84', 'XP.B30.AW3', '0001', '84', True
+    )
+    assert cnpj.parse_cnpj('XPB30AW3000184', formatted=False) == CNPJ(
+        'XPB30AW3000184', 'XPB30AW3', '0001', (8, 4), True
+    )
+
 
 def test_random_cnpj():
     """Test generation of random, valid CNPJ."""
@@ -120,6 +173,7 @@ def test_random_cnpj():
         assert cnpj.validate_cnpj(cnpj.random_cnpj()) is True
         assert cnpj.validate_cnpj(cnpj.random_cnpj(formatted=True)) is True
         assert cnpj.validate_cnpj(cnpj.random_cnpj(formatted=False)) is True
+        assert cnpj.validate_cnpj(cnpj.random_cnpj(alphanumeric=True)) is True
 
     assert isinstance(cnpj.random_cnpj(), str) is True
     assert isinstance(cnpj.random_cnpj(formatted=False), str) is True
