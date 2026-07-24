@@ -24,6 +24,13 @@ Validate a CNPJ number for a firm, in this case Telefônica Brasil:
     >>> validate_cnpj('02.558.157/0001-55')
     False
 
+As of 07/2026, CNPJ can also be issued in a new alphanumeric format:
+
+    >>> validate_cnpj('XP.B30.AW3/0001-84')
+    True
+    >>> validate_cnpj('xp.b30.aw3/0001-84')
+    True
+
 Integer input that is too short due to missing zeros is auto-corrected:
 
     >>> validate_cnpj(2558157000162)
@@ -73,6 +80,10 @@ Use the format function when displaying identifiers:
     >>> from brazilnum.cnpj import format_cnpj
     >>> format_cnpj('02558157000162')
     '02.558.157/0001-62'
+    >>> format_cnpj('02558157000162')
+    '02.558.157/0001-62'
+    >>> format_cnpj('XPB30AW3000184')
+    'XP.B30.AW3/0001-84'
 
     >>> from brazilnum.cei import format_cei
     >>> format_cei('115830024985')
@@ -105,6 +116,12 @@ zeros are missing. You can pad and validate these in one step:
 
     >>> pad_cnpj(2558157000155, validate=True)
     ('02558157000155', False)
+
+    >>> pad_cnpj(2558157000155, validate=True)
+    ('02558157000155', False)
+
+    >>> pad_cnpj('PB3AW3W000133')
+    '0PB3AW3W000133'
 
     >>> from brazilnum.cei import pad_cei
     >>> pad_cei(115830024985, validate=True)
@@ -148,6 +165,11 @@ full CNPJ from the first 8 digits and a given establishment number:
     >>> cnpj_from_firm_id('02.558.157', establishment='0002', formatted=True)
     '02.558.157/0002-43'
 
+    This also works with the alphanumeric CNPJ format:
+
+    >>> cnpj_from_firm_id('XPB30AW3')
+    'XPB30AW3000184'
+
 
 CNPJ can be parsed into firm, establishment, and check digit components:
 
@@ -157,6 +179,15 @@ CNPJ can be parsed into firm, establishment, and check digit components:
 
     >>> parse_cnpj('02.558.157/0001-62', formatted=False)
     CNPJ(cnpj=2558157000162, firm=2558157, establishment=1, check=(6, 2), valid=True)
+
+Alphanumeric CNPJs are parsed the same way. Since letters can't be
+represented as Python ints, ``formatted=False`` returns strings instead:
+
+    >>> parse_cnpj('XPB30AW3000184')
+    CNPJ(cnpj='XP.B30.AW3/0001-84', firm='XP.B30.AW3', establishment='0001', check='84', valid=True)
+
+    >>> parse_cnpj('XPB30AW3000184', formatted=False)
+    CNPJ(cnpj='XPB30AW3000184', firm='XPB30AW3', establishment='0001', check=('8', '4'), valid=True)
 
 
 #### CEP Parsing
@@ -250,6 +281,8 @@ CNPJ check digits are calculated from the first 12 digits:
 
     >>> cnpj_check_digits('025581570001')
     (6, 2)
+    >>> cnpj_check_digits('XPB30AW30001')
+    (8, 4)
 
 The CEI check digit is calculated from the first 11 digits:
 
