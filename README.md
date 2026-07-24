@@ -44,6 +44,22 @@ Integer input that is too short due to missing zeros is auto-corrected:
     >>> validate_cnpj(2558157000162, autopad=False)
     False
 
+Missing values (`None` or `NaN`) are treated as invalid identifiers, so
+validation works on a stream of identifiers where some are missing:
+
+    >>> validate_cnpj(None)
+    False
+    >>> validate_cnpj(float('nan'))
+    False
+
+Any other input type (e.g. a float or a list) raises a `TypeError`, since
+that usually signals a problem in the data pipeline that is better
+surfaced early than hidden by a `False` return. The formatting, padding,
+and parsing functions raise `TypeError` for missing values too, because
+there is no sensible way to format or parse a missing identifier. This
+behavior is shared by all validation functions in the package as of
+version 0.10.0.
+
 Validate a CEI number, used for businesses that do not require a CNPJ:
 
     >>> from brazilnum.cei import validate_cei
