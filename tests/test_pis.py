@@ -36,6 +36,23 @@ def test_validate_pis():
     assert pis.validate_pis('') is False
 
 
+def test_validate_pis_bad_input():
+    """Check handling of missing values and unsupported input types."""
+
+    # missing identifiers are invalid, not an error
+    assert pis.validate_pis(None) is False
+    assert pis.validate_pis(float('nan')) is False
+
+    # other unsupported types raise an error
+    for bad in (12536026320.0, 12.34, True, b'12536026320', []):
+        with pytest.raises(TypeError, match=r"must be str or int"):
+            pis.validate_pis(bad)
+
+    # missing values cannot be formatted
+    with pytest.raises(TypeError, match=r"must be str or int"):
+        pis.format_pis(None)
+
+
 def test_pis_check_digit():
     """Test calculation of check digit for a PIS/PASEP identifier."""
 

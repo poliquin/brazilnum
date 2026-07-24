@@ -25,6 +25,23 @@ def test_validate_muni():
     assert muni.validate_muni('0550308') is False
 
 
+def test_validate_muni_bad_input():
+    """Check handling of missing values and unsupported input types."""
+
+    # missing identifiers are invalid, not an error
+    assert muni.validate_muni(None) is False
+    assert muni.validate_muni(float('nan')) is False
+
+    # other unsupported types raise an error
+    for bad in (3550308.0, 12.34, True, b'3550308', []):
+        with pytest.raises(TypeError, match=r"must be str or int"):
+            muni.validate_muni(bad)
+
+    # missing values have no check digit
+    with pytest.raises(TypeError, match=r"must be str or int"):
+        muni.muni_check_digit(None)
+
+
 def test_validate_muni_exceptions():
     """Check the 9 real municipio codes with invalid check digits."""
 

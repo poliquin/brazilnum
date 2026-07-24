@@ -30,6 +30,13 @@ def test_format_cep():
     with pytest.raises(ValueError, match=r"Invalid CEP.*"):
         cep.format_cep(131650000)
 
+    # missing values and unsupported types cannot be formatted
+    with pytest.raises(TypeError, match=r"must be str or int"):
+        cep.format_cep(None)
+
+    with pytest.raises(TypeError, match=r"must be str or int"):
+        cep.format_cep([13165000])
+
 
 def test_parse_cep():
     """Test parsing of CEP into geographic components."""

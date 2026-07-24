@@ -30,6 +30,23 @@ def test_validate_cei():
     assert cei.validate_cei('') is False
 
 
+def test_validate_cei_bad_input():
+    """Check handling of missing values and unsupported input types."""
+
+    # missing identifiers are invalid, not an error
+    assert cei.validate_cei(None) is False
+    assert cei.validate_cei(float('nan')) is False
+
+    # other unsupported types raise an error
+    for bad in (115830024985.0, 12.34, True, b'115830024985', []):
+        with pytest.raises(TypeError, match=r"must be str or int"):
+            cei.validate_cei(bad)
+
+    # missing values cannot be formatted
+    with pytest.raises(TypeError, match=r"must be str or int"):
+        cei.format_cei(None)
+
+
 def test_cei_check_digit():
     """Test calculation of check digit for a CEI identifier."""
 

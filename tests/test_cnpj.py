@@ -33,6 +33,31 @@ def test_validate_cnpj():
     assert cnpj.validate_cnpj('') is False
 
 
+def test_validate_cnpj_bad_input():
+    """Check handling of missing values and unsupported input types."""
+
+    # None and NaN mark missing identifiers in a data stream, which can
+    # happen when using the package correctly, so they are just invalid
+    assert cnpj.validate_cnpj(None) is False
+    assert cnpj.validate_cnpj(float('nan')) is False
+
+    # any other unsupported type suggests an upstream problem with the
+    # caller's data, so it raises an error instead of returning False
+    for bad in (2558157000162.0, 12.34, True, b'02558157000162', []):
+        with pytest.raises(TypeError, match=r"must be str or int"):
+            cnpj.validate_cnpj(bad)
+
+    # missing values cannot be formatted, padded, or parsed
+    with pytest.raises(TypeError, match=r"must be str or int"):
+        cnpj.format_cnpj(None)
+
+    with pytest.raises(TypeError, match=r"must be str or int"):
+        cnpj.parse_cnpj(float('nan'))
+
+    with pytest.raises(TypeError, match=r"must be str or int"):
+        cnpj.cnpj_check_digits(None)
+
+
 def test_validate_cnpj_alphanumeric():
     """Check validation of alphanumeric CNPJ identifiers (RFB, 07/2026)."""
 

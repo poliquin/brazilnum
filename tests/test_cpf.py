@@ -38,6 +38,26 @@ def test_validate_cpf():
     assert cpf.validate_cpf('') is False
 
 
+def test_validate_cpf_bad_input():
+    """Check handling of missing values and unsupported input types."""
+
+    # missing identifiers are invalid, not an error
+    assert cpf.validate_cpf(None) is False
+    assert cpf.validate_cpf(float('nan')) is False
+
+    # other unsupported types raise an error
+    for bad in (96881134258.0, 12.34, True, b'96881134258', []):
+        with pytest.raises(TypeError, match=r"must be str or int"):
+            cpf.validate_cpf(bad)
+
+    # missing values cannot be formatted or padded
+    with pytest.raises(TypeError, match=r"must be str or int"):
+        cpf.format_cpf(None)
+
+    with pytest.raises(TypeError, match=r"must be str or int"):
+        cpf.pad_cpf(None)
+
+
 def test_cpf_check_digits():
     """Test calculation of check digits for a CPF identifier."""
 
