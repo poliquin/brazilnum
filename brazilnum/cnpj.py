@@ -15,7 +15,8 @@ Functions for working with Brazilian company identifiers (CNPJ).
 CNPJ_FIRST_WEIGHTS = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]
 CNPJ_SECOND_WEIGHTS = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]
 
-# digits, e.g. new CNPJ format from Receita Federal (IN RFB nº 2.229/2024)
+# CNPJ may contain letters in the first 12 positions (IN RFB nº 2.229/2024),
+# but the two check digits are always numeric
 CNPJ_PATTERN = re.compile(r'^[0-9A-Z]{12}[0-9]{2}$')
 
 CNPJ = namedtuple('CNPJ', ['cnpj', 'firm', 'establishment', 'check', 'valid'])

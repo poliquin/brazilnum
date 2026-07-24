@@ -31,6 +31,12 @@ As of 07/2026, CNPJ can also be issued in a new alphanumeric format:
     >>> validate_cnpj('xp.b30.aw3/0001-84')
     True
 
+**Note:** because CNPJ can now contain letters, stray letters in the input
+make an identifier invalid; they are no longer discarded like punctuation:
+
+    >>> validate_cnpj('CNPJ: 02.558.157/0001-62')
+    False
+
 Integer input that is too short due to missing zeros is auto-corrected:
 
     >>> validate_cnpj(2558157000162)
@@ -80,8 +86,6 @@ Use the format function when displaying identifiers:
     >>> from brazilnum.cnpj import format_cnpj
     >>> format_cnpj('02558157000162')
     '02.558.157/0001-62'
-    >>> format_cnpj('02558157000162')
-    '02.558.157/0001-62'
     >>> format_cnpj('XPB30AW3000184')
     'XP.B30.AW3/0001-84'
 
@@ -113,9 +117,6 @@ zeros are missing. You can pad and validate these in one step:
     >>> from brazilnum.cnpj import pad_cnpj
     >>> pad_cnpj(2558157000162, validate=True)
     ('02558157000162', True)
-
-    >>> pad_cnpj(2558157000155, validate=True)
-    ('02558157000155', False)
 
     >>> pad_cnpj(2558157000155, validate=True)
     ('02558157000155', False)
@@ -165,7 +166,7 @@ full CNPJ from the first 8 digits and a given establishment number:
     >>> cnpj_from_firm_id('02.558.157', establishment='0002', formatted=True)
     '02.558.157/0002-43'
 
-    This also works with the alphanumeric CNPJ format:
+This also works with the alphanumeric CNPJ format:
 
     >>> cnpj_from_firm_id('XPB30AW3')
     'XPB30AW3000184'
