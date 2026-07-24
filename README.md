@@ -31,8 +31,8 @@ As of 07/2026, CNPJ can also be issued in a new alphanumeric format:
     >>> validate_cnpj('xp.b30.aw3/0001-84')
     True
 
-**Note:** because CNPJ can now contain letters, stray letters in the input
-make an identifier invalid; they are no longer discarded like punctuation:
+**Note:** because CNPJ can contain letters, stray letters in the input
+make an identifier invalid as of version 0.9.0:
 
     >>> validate_cnpj('CNPJ: 02.558.157/0001-62')
     False
@@ -111,8 +111,8 @@ returns a string:
     >>> clean_id(115830024985)
     '115830024985'
 
-Your data source probably stores identifiers as integers, so leading
-zeros are missing. You can pad and validate these in one step:
+If your data source stores identifiers as integers and leading
+zeros are missing, you can pad and validate them in one step:
 
     >>> from brazilnum.cnpj import pad_cnpj
     >>> pad_cnpj(2558157000162, validate=True)
@@ -152,8 +152,8 @@ Padding works the same way for PIS/PASEP and CPF numbers:
 
 #### CNPJ Parsing
 The first 8 digits of CNPJs identify a firm, and the following 4 digits
-identify a specific business establishment owned by that firm.  Headquarters is
-often establishment 0001.  The ``cnpj_from_firm_id`` function will create a
+identify a specific business establishment owned by that firm. Headquarters is
+often establishment 0001. The ``cnpj_from_firm_id`` function will create a
 full CNPJ from the first 8 digits and a given establishment number:
 
     >>> from brazilnum.cnpj import cnpj_from_firm_id
@@ -170,7 +170,6 @@ This also works with the alphanumeric CNPJ format:
 
     >>> cnpj_from_firm_id('XPB30AW3')
     'XPB30AW3000184'
-
 
 CNPJ can be parsed into firm, establishment, and check digit components:
 
@@ -198,7 +197,6 @@ CNPJs, so avoid relying on the integer representation in new code.
 
 
 #### CEP Parsing
-
 Códigos de Endereçamentos Postais (zip codes) can be formatted and parsed:
 
     >>> from brazilnum.cep import format_cep, parse_cep
