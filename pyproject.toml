@@ -41,5 +41,5 @@ packages = ["brazilnum"]
 
 [tool.pytest.ini_options]
 addopts = "--doctest-glob=README.md"
-testpaths = ["README.md"]
+testpaths = ["tests", "README.md"]
 pythonpath = ["."]
