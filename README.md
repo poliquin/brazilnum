@@ -181,13 +181,15 @@ CNPJ can be parsed into firm, establishment, and check digit components:
     CNPJ(cnpj=2558157000162, firm=2558157, establishment=1, check=(6, 2), valid=True)
 
 Alphanumeric CNPJs are parsed the same way. Since letters can't be
-represented as Python ints, ``formatted=False`` returns strings instead:
+represented as Python ints, ``formatted=False`` returns strings for the
+identifier components; the check digits are always numeric, so they are
+returned as integers in both cases:
 
     >>> parse_cnpj('XPB30AW3000184')
     CNPJ(cnpj='XP.B30.AW3/0001-84', firm='XP.B30.AW3', establishment='0001', check='84', valid=True)
 
     >>> parse_cnpj('XPB30AW3000184', formatted=False)
-    CNPJ(cnpj='XPB30AW3000184', firm='XPB30AW3', establishment='0001', check=('8', '4'), valid=True)
+    CNPJ(cnpj='XPB30AW3000184', firm='XPB30AW3', establishment='0001', check=(8, 4), valid=True)
 
 
 #### CEP Parsing

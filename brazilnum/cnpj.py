@@ -135,10 +135,9 @@ def parse_cnpj(cnpj, formatted=True):
         return CNPJ(cnpj, firm, estbl, check, valid)
     else:
         firm = cnpj[:8]
+        check = tuple(int(k) for k in check)  # check digits are always numeric
         if cnpj.isdigit():
-            check = tuple(int(k) for k in check)
             return CNPJ(int(cnpj), int(firm), int(estbl), check, valid)
-        check = tuple(check)
         return CNPJ(cnpj, firm, estbl, check, valid)
 
 
