@@ -128,7 +128,12 @@ def pad_cnpj(cnpj, validate=False):
 
 
 def parse_cnpj(cnpj, formatted=True):
-    """Split CNPJ into firm, establishment, and check digits, and validate."""
+    """Split CNPJ into firm, establishment, and check digits, and validate.
+
+    With formatted=False, fully numeric CNPJ are returned as integers for
+    backwards compatibility, while alphanumeric CNPJ are returned as
+    strings. Check digits are always numeric and returned as integers.
+    """
     cnpj, valid = pad_cnpj(cnpj, validate=True)
     estbl, check = cnpj[8:12], cnpj[12:]
     if formatted:

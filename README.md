@@ -192,6 +192,10 @@ returned as integers in both cases:
     >>> parse_cnpj('XPB30AW3000184', formatted=False)
     CNPJ(cnpj='XPB30AW3000184', firm='XPB30AW3', establishment='0001', check=(8, 4), valid=True)
 
+**Note:** as alphanumeric CNPJs become more common, a future release may
+switch ``parse_cnpj(..., formatted=False)`` to returning strings for all
+CNPJs, so avoid relying on the integer representation in new code.
+
 
 #### CEP Parsing
 
