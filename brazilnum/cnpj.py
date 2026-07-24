@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 
 from __future__ import absolute_import
-
+import re
 import random
 from collections import namedtuple
 
-from .util import clean_id, pad_id
+from .util import clean_alphanumeric_id, pad_id, pad_alphanumeric_id
 
 """
 Functions for working with Brazilian company identifiers (CNPJ).
@@ -14,14 +14,31 @@ Functions for working with Brazilian company identifiers (CNPJ).
 
 CNPJ_FIRST_WEIGHTS = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]
 CNPJ_SECOND_WEIGHTS = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]
+
+# digits, e.g. new CNPJ format from Receita Federal (IN RFB nº 2.229/2024)
+CNPJ_PATTERN = re.compile(r'^[0-9A-Z]{12}[0-9]{2}$')
+
 CNPJ = namedtuple('CNPJ', ['cnpj', 'firm', 'establishment', 'check', 'valid'])
 
 
-def validate_cnpj(cnpj, autopad=True):
-    """Check whether CNPJ is valid. Optionally pad if too short."""
-    cnpj = clean_id(cnpj)
+def _char_value(c):
+    """Value of a character for check-digit calculation: ord(c) - 48.
+    Digits 0-9 -> 0-9 (same as the plain numeric value).
+    Letters A-Z -> 17-42 (alphanumeric CNPJ, RFB, from 07/2026).
+    """
+    return ord(c) - 48
 
-    # all complete CNPJ are 14 digits long
+
+def validate_cnpj(cnpj, autopad=True):
+    """Check whether CNPJ is valid. Optionally pad if too short.
+
+    Accepts both the legacy numeric-only CNPJ and the new alphanumeric
+    CNPJ format introduced by Receita Federal (Instrução Normativa RFB
+    nº 2.229/2024), effective from 07/2026.
+    """
+    cnpj = clean_alphanumeric_id(cnpj)
+
+    # all complete CNPJ are 14 characters long
     if len(cnpj) < 14:
         if not autopad:
             return False
@@ -30,18 +47,23 @@ def validate_cnpj(cnpj, autopad=True):
     elif len(cnpj) > 14:
         return False
 
-    # 0 is invalid; smallest valid CNPJ is 191
+    # first 12 positions: digits or A-Z letters; last 2 (check digits):
+    # always numeric
+    if not CNPJ_PATTERN.match(cnpj):
+        return False
+
+    # 0 is invalid; smallest valid numeric CNPJ is 191
     if cnpj == '00000000000000':
         return False
 
-    digits = [int(k) for k in cnpj[:13]]  # identifier digits
+    values = [_char_value(k) for k in cnpj[:13]]  # 12 identifier chars + DV1
     # validate the first check digit
-    cs = sum(w * k for w, k in zip(CNPJ_FIRST_WEIGHTS, digits[:-1])) % 11
+    cs = sum(w * v for w, v in zip(CNPJ_FIRST_WEIGHTS, values[:-1])) % 11
     cs = 0 if cs < 2 else 11 - cs
     if cs != int(cnpj[12]):
         return False  # first check digit is not correct
     # validate the second check digit
-    cs = sum(w * k for w, k in zip(CNPJ_SECOND_WEIGHTS, digits)) % 11
+    cs = sum(w * v for w, v in zip(CNPJ_SECOND_WEIGHTS, values)) % 11
     cs = 0 if cs < 2 else 11 - cs
     if cs != int(cnpj[13]):
         return False  # second check digit is not correct
@@ -51,27 +73,27 @@ def validate_cnpj(cnpj, autopad=True):
 
 def cnpj_check_digits(cnpj):
     """Find two check digits needed to make a CNPJ valid."""
-    cnpj = clean_id(cnpj)
+    cnpj = clean_alphanumeric_id(cnpj)
     if len(cnpj) < 12:
-        raise ValueError('CNPJ must have at least 12 digits: {0}'.format(cnpj))
-    digits = [int(k) for k in cnpj[:13]]
+        raise ValueError('CNPJ must have at least 12 characters: {0}'.format(cnpj))
+    values = [_char_value(k) for k in cnpj[:13]]
     # find the first check digit
-    cs = sum(w * k for w, k in zip(CNPJ_FIRST_WEIGHTS, digits)) % 11
+    cs = sum(w * v for w, v in zip(CNPJ_FIRST_WEIGHTS, values)) % 11
     check = 0 if cs < 2 else 11 - cs
     # find the second check digit
-    digits.append(check)
-    cs = sum(w * k for w, k in zip(CNPJ_SECOND_WEIGHTS, digits)) % 11
+    values.append(check)
+    cs = sum(w * v for w, v in zip(CNPJ_SECOND_WEIGHTS, values)) % 11
     if cs < 2:
         return check, 0
     return check, 11 - cs
 
 
 def cnpj_from_firm_id(firm, establishment='0001', formatted=False):
-    """Takes first 8 digits of a CNPJ (firm identifier) and builds a valid,
-       complete CNPJ by appending an establishment identifier and calculating
-       necessary check digits.
+    """Takes first 8 characters of a CNPJ (firm identifier) and builds a
+       valid, complete CNPJ by appending an establishment identifier and
+       calculating necessary check digits.
     """
-    cnpj = clean_id('{0}{1}'.format(firm, establishment))
+    cnpj = clean_alphanumeric_id('{0}{1}'.format(firm, establishment))
     checks = ''.join([str(k) for k in cnpj_check_digits(cnpj)])
     if not formatted:
         return cnpj + checks
@@ -87,8 +109,17 @@ def format_cnpj(cnpj):
 
 
 def pad_cnpj(cnpj, validate=False):
-    """Takes a CNPJ and pads it with leading zeros."""
-    padded = pad_id(cnpj, '%0.014i')
+    """Takes a CNPJ and pads it with leading zeros.
+
+    Supports both the legacy fully-numeric CNPJ (padded via pad_id, for
+    backwards compatibility) and the new alphanumeric CNPJ format, which
+    is padded as a string since it may contain letters.
+    """
+    if clean_alphanumeric_id(cnpj).isdigit():
+        padded = pad_id(cnpj, '%0.014i')
+    else:
+        padded = pad_alphanumeric_id(cnpj, 14)
+
     if validate:
         return padded, validate_cnpj(padded)
     return padded
@@ -104,8 +135,11 @@ def parse_cnpj(cnpj, formatted=True):
         return CNPJ(cnpj, firm, estbl, check, valid)
     else:
         firm = cnpj[:8]
-        check = tuple(int(k) for k in check)
-        return CNPJ(int(cnpj), int(firm), int(estbl), check, valid)
+        if cnpj.isdigit():
+            check = tuple(int(k) for k in check)
+            return CNPJ(int(cnpj), int(firm), int(estbl), check, valid)
+        check = tuple(check)
+        return CNPJ(cnpj, firm, estbl, check, valid)
 
 
 def random_cnpj(formatted=True):
