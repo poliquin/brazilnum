@@ -3,6 +3,7 @@
 from __future__ import absolute_import
 import re
 import random
+import string
 from collections import namedtuple
 
 from .util import clean_alphanumeric_id, pad_id, pad_alphanumeric_id
@@ -142,10 +143,19 @@ def parse_cnpj(cnpj, formatted=True):
         return CNPJ(cnpj, firm, estbl, check, valid)
 
 
-def random_cnpj(formatted=True):
-    """Create a random, valid CNPJ identifier."""
-    firm = random.randint(10000000, 99999999)
-    establishment = random.choice(['0001', '0002', '0003', '0004', '0005'])
+def random_cnpj(formatted=True, alphanumeric=False):
+    """Create a random, valid CNPJ identifier.
+
+    With alphanumeric=True, the identifier follows the alphanumeric CNPJ
+    format issued by Receita Federal starting in July 2026.
+    """
+    if alphanumeric:
+        chars = string.digits + string.ascii_uppercase
+        firm = ''.join(random.choice(chars) for _ in range(8))
+        establishment = ''.join(random.choice(chars) for _ in range(4))
+    else:
+        firm = random.randint(10000000, 99999999)
+        establishment = random.choice(['0001', '0002', '0003', '0004', '0005'])
     cnpj = cnpj_from_firm_id(firm, establishment)
     if formatted:
         return format_cnpj(cnpj)

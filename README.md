@@ -243,8 +243,9 @@ If you need random CNPJ for database testing, use the ``random_cnpj`` function,
 which can return either unformatted or formatted identifiers:
 
     from brazilnum.cnpj import random_cnpj
-    random_cnpj()       # for a random, formatted CNPJ
-    random_cnpj(False)  # for a random, unformatted CNPJ
+    random_cnpj()                   # for a random, formatted CNPJ
+    random_cnpj(False)              # for a random, unformatted CNPJ
+    random_cnpj(alphanumeric=True)  # for a random alphanumeric CNPJ
 
 Use ``random_cei`` for random CEI identifiers:
 
