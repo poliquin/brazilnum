@@ -3,7 +3,7 @@
 import re
 from random import randint
 
-from .util import clean_id, pad_id
+from .util import clean_id, is_missing, pad_id
 
 """
 Functions for working with Brazilian PIS/PASEP identifiers.
@@ -15,7 +15,13 @@ PIS_WEIGHTS = [3, 2, 9, 8, 7, 6, 5, 4, 3, 2]
 
 
 def validate_pis(pis, autopad=True):
-    """Check whether PIS/PASEP is valid. Optionally pad if too short."""
+    """Check whether PIS/PASEP is valid. Optionally pad if too short.
+
+    Missing values (None or NaN) are considered invalid; other non-str,
+    non-int input raises TypeError.
+    """
+    if is_missing(pis):
+        return False
     pis = clean_id(pis)
 
     # all complete PIS/PASEP are 11 digits long

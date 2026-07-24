@@ -5,7 +5,7 @@ import random
 import string
 from collections import namedtuple
 
-from .util import clean_alphanumeric_id, pad_id, pad_alphanumeric_id
+from .util import clean_alphanumeric_id, is_missing, pad_id, pad_alphanumeric_id
 
 """
 Functions for working with Brazilian company identifiers (CNPJ).
@@ -36,7 +36,12 @@ def validate_cnpj(cnpj, autopad=True):
     Accepts both the legacy numeric-only CNPJ and the new alphanumeric
     CNPJ format introduced by Receita Federal (Instrução Normativa RFB
     nº 2.229/2024), effective from 07/2026.
+
+    Missing values (None or NaN) are considered invalid; other non-str,
+    non-int input raises TypeError.
     """
+    if is_missing(cnpj):
+        return False
     cnpj = clean_alphanumeric_id(cnpj)
 
     # all complete CNPJ are 14 characters long

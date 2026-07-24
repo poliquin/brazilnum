@@ -3,7 +3,7 @@
 import re
 import random
 
-from .util import clean_id, pad_id
+from .util import clean_id, is_missing, pad_id
 
 """
 Functions for working with Brazilian CPF identifiers.
@@ -15,7 +15,13 @@ CPF_WEIGHTS = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
 
 def validate_cpf(cpf, autopad=True):
-    """Check whether CPF is valid."""
+    """Check whether CPF is valid.
+
+    Missing values (None or NaN) are considered invalid; other non-str,
+    non-int input raises TypeError.
+    """
+    if is_missing(cpf):
+        return False
     cpf = clean_id(cpf)
 
     # all complete CPF are 11 digits long

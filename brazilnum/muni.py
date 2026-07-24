@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from .util import clean_id
+from .util import clean_id, is_missing
 
 """
 Functions for working with Brazilian municipality (municipio) codes.
@@ -25,7 +25,13 @@ SHIM = {
 
 
 def validate_muni(muni):
-    """Check whether municipio code is valid."""
+    """Check whether municipio code is valid.
+
+    Missing values (None or NaN) are considered invalid; other non-str,
+    non-int input raises TypeError.
+    """
+    if is_missing(muni):
+        return False
     muni = clean_id(muni)
     # municipal codes are 7 digits long, and cannot start with 0
     if len(muni) != 7:

@@ -3,7 +3,7 @@
 import re
 import random
 
-from .util import clean_id, pad_id
+from .util import clean_id, is_missing, pad_id
 
 """
 Functions for working with Brazilian CEI identifiers.
@@ -15,7 +15,13 @@ CEI_WEIGHTS = [7, 4, 1, 8, 5, 2, 1, 6, 3, 7, 4]
 
 
 def validate_cei(cei, autopad=True):
-    """Check whether CEI is valid. Optionally pad if too short."""
+    """Check whether CEI is valid. Optionally pad if too short.
+
+    Missing values (None or NaN) are considered invalid; other non-str,
+    non-int input raises TypeError.
+    """
+    if is_missing(cei):
+        return False
     cei = clean_id(cei)
 
     # all complete CEI are 12 digits long
