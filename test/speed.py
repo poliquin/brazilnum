@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-from __future__ import print_function
 import sys
 import timeit
 import csv
@@ -16,7 +15,7 @@ Test speed of CNPJ, CPF, PIS/PASEP, and municipio functions.
 
 """
 
-# read sample of 200 CNPJ numbers (100 good)
+# read sample of numeric and alphanumeric CNPJ, both valid and invalid
 with open('cnpj.csv', 'r') as fh:
     rdr = csv.DictReader(fh)
     CNPJ = list(rdr)
@@ -42,7 +41,7 @@ with open('munis.csv', 'r') as fh:
 
 
 def cnpj_speed():
-    """Check speed of validating 200 CNPJ, 100 invalid."""
+    """Check speed of validating sample CNPJ, valid and invalid."""
     for c in CNPJ:
         try:
             assert int(c['good']) == validate_cnpj(c['cnpj'])
@@ -79,23 +78,23 @@ def muni_speed():
 
 reps = 1000
 
-# time validation of CNPJ, 100 good and 100 bad
+# time validation of CNPJ
 cnpj_time = timeit.timeit(cnpj_speed, number=reps)
-time_per_thousand_cnpj = (cnpj_time / (200. * reps)) * 1000.
+time_per_thousand_cnpj = (cnpj_time / (len(CNPJ) * reps)) * 1000.
 
 print('Validate 1,000 CNPJ: {0} seconds'.format(time_per_thousand_cnpj))
 
 
-# time validation of PIS/PASEP, 100 good and 100 bad
+# time validation of PIS/PASEP
 pis_time = timeit.timeit(pis_speed, number=reps)
-time_per_thousand_pis = (pis_time / (200. * reps)) * 1000.
+time_per_thousand_pis = (pis_time / (len(PIS) * reps)) * 1000.
 
 print('Validate 1,000 PIS/PASEP: {0} seconds'.format(time_per_thousand_pis))
 
 
-# time validation of CPF, 100 good and 100 bad
+# time validation of CPF
 cpf_time = timeit.timeit(cpf_speed, number=reps)
-time_per_thousand_cpf = (cpf_time / (200. * reps)) * 1000.
+time_per_thousand_cpf = (cpf_time / (len(CPF) * reps)) * 1000.
 
 print('Validate 1,000 CPF: {0} seconds'.format(time_per_thousand_cpf))
 
@@ -109,18 +108,22 @@ print('Validate municipios: {0} seconds'.format(muni_time))
 def parse_cnpj_speed():
     """Parse CNPJ read from file."""
     for i in CNPJ:
-        parse_cnpj(int(i['cnpj']))
+        # numeric CNPJ often arrive as integers from data files, but
+        # alphanumeric CNPJ can only be strings
+        c = i['cnpj']
+        parse_cnpj(int(c) if c.isdigit() else c)
 
 
 cnpj_parse_time = timeit.timeit(parse_cnpj_speed, number=reps)
-print('Parse 200 CNPJ: {0} seconds'.format(cnpj_parse_time))
+print('Parse {0} CNPJ: {1} seconds'.format(len(CNPJ), cnpj_parse_time))
 
 
 # time padding of all identifiers
 def pad_speed():
-    """Pad integer identifiers."""
+    """Pad identifiers."""
     for i in CNPJ:
-        pad_cnpj(int(i['cnpj']), validate=False)
+        c = i['cnpj']
+        pad_cnpj(int(c) if c.isdigit() else c, validate=False)
     for i in PIS:
         pad_pis(int(i['pis']), validate=False)
     for i in CPF:
